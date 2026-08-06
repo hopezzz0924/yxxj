@@ -1,0 +1,888 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1,user-scalable=no,viewport-fit=cover">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<meta name="apple-mobile-web-app-title" content="幼小衔接乐园">
+<link rel="manifest" href="data:application/json,{%22name%22:%22%E5%B9%BC%E5%B0%8F%E8%A1%94%E6%8E%A5%E4%B9%90%E5%9B%AD%22,%22short_name%22:%22%E5%B9%BC%E5%B0%8F%E8%A1%94%E6%8E%A5%22,%22start_url%22:%22./%22,%22display%22:%22standalone%22,%22orientation%22:%22portrait%22,%22background_color%22:%22%23FFF8F0%22,%22theme_color%22:%22%23FF6B6B%22}">
+<title>幼小衔接乐园</title>
+<style>
+/* ============ CSS Reset & Variables ============ */
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+:root{
+  --primary:#FF6B6B;--primary-light:#FF8E8E;--secondary:#4ECDC4;--secondary-light:#7EDDD6;
+  --accent:#FFE66D;--accent-light:#FFF3A0;--chinese:#FF6B6B;--math:#4ECDC4;--english:#A78BFA;
+  --bg:#FFF8F0;--bg-card:#FFF;--text:#2D3436;--text-light:#636E72;--text-white:#FFF;
+  --shadow:0 2px 12px rgba(0,0,0,.08);--shadow-lg:0 6px 24px rgba(0,0,0,.12);
+  --radius:12px;--radius-lg:20px;--radius-round:999px;--font-xl:22px;--font-lg:18px;--font-md:15px;--font-sm:13px;--font-xs:11px;
+}
+body{font-family:-apple-system,BlinkMacSystemFont,"PingFang SC","Microsoft YaHei",sans-serif;font-size:var(--font-md);color:var(--text);background:var(--bg);-webkit-tap-highlight-color:transparent;overflow-x:hidden}
+input,button,textarea{font:inherit;color:inherit}
+
+/* ============ Common ============ */
+.page{display:none;min-height:100vh;padding-bottom:80px}
+.page.active{display:block}
+.container{padding:0 16px}
+.section-title{font-size:var(--font-xl);font-weight:700;margin:24px 0 12px;padding:0 4px}
+.section-subtitle{font-size:var(--font-sm);color:var(--text-light);margin:0 0 16px;padding:0 4px}
+.card{background:var(--bg-card);border-radius:var(--radius-lg);box-shadow:var(--shadow);padding:24px;margin:16px 4px}
+.flex-center{display:flex;align-items:center;justify-content:center}
+.flex-between{display:flex;align-items:center;justify-content:space-between}
+
+.btn{display:inline-flex;align-items:center;justify-content:center;border-radius:var(--radius-round);font-size:var(--font-md);font-weight:600;padding:12px 32px;border:none;cursor:pointer;transition:transform .15s,opacity .15s;text-decoration:none}
+.btn:active{transform:scale(.95);opacity:.85}
+.btn-primary{background:linear-gradient(135deg,var(--primary),var(--primary-light));color:var(--text-white);box-shadow:0 4px 16px rgba(255,107,107,.35)}
+.btn-secondary{background:linear-gradient(135deg,var(--secondary),var(--secondary-light));color:var(--text-white)}
+.btn-accent{background:linear-gradient(135deg,var(--accent),#FFF3A0);color:var(--text)}
+.btn-outline{background:transparent;border:2px solid var(--primary);color:var(--primary)}
+.btn-lg{padding:20px 48px;font-size:var(--font-lg)}
+.btn-sm{padding:8px 20px;font-size:var(--font-sm)}
+.btn:disabled{opacity:.5;pointer-events:none}
+
+/* ============ Animations ============ */
+@keyframes pop-in{0%{transform:scale(0);opacity:0}70%{transform:scale(1.1)}100%{transform:scale(1);opacity:1}}
+@keyframes slide-up{0%{transform:translateY(40px);opacity:0}100%{transform:translateY(0);opacity:1}}
+@keyframes bounce{0%,100%{transform:translateY(0)}50%{transform:translateY(-12px)}}
+@keyframes pulse{0%,100%{transform:scale(1)}50%{transform:scale(1.06)}}
+@keyframes float{0%,100%{transform:translateY(0) rotate(0deg)}33%{transform:translateY(-8px) rotate(2deg)}66%{transform:translateY(4px) rotate(-2deg)}}
+@keyframes shake{0%,100%{transform:translateX(0)}25%{transform:translateX(-5px)}75%{transform:translateX(5px)}}
+.pop-in{animation:pop-in .4s cubic-bezier(.68,-.55,.27,1.55)}.slide-up{animation:slide-up .4s ease}.float{animation:float 3s ease-in-out infinite}
+
+/* ============ TabBar ============ */
+.tabbar{position:fixed;bottom:0;left:0;right:0;display:flex;background:#FFF;border-top:1px solid #EEE;padding-bottom:env(safe-area-inset-bottom);z-index:50}
+.tabbar .tab{flex:1;display:flex;flex-direction:column;align-items:center;padding:8px 0;font-size:12px;color:#999;cursor:pointer;border:none;background:none}
+.tabbar .tab.active{color:var(--primary)}
+.tabbar .tab-icon{font-size:24px;margin-bottom:2px}
+
+/* ============ Toast ============ */
+.toast{position:fixed;top:50%;left:50%;transform:translate(-50%,-50%);background:rgba(0,0,0,.75);color:#fff;padding:12px 28px;border-radius:var(--radius-round);font-size:var(--font-sm);z-index:2000;pointer-events:none;opacity:0;transition:opacity .2s}
+.toast.show{opacity:1}
+
+/* ============ Modal ============ */
+.modal-mask{position:fixed;top:0;left:0;right:0;bottom:0;background:rgba(0,0,0,.5);display:flex;align-items:center;justify-content:center;z-index:1000;padding:20px}
+.modal-box{background:#fff;border-radius:var(--radius-lg);padding:32px;width:100%;max-width:360px;text-align:center;box-shadow:var(--shadow-lg)}
+.modal-actions{display:flex;gap:16px;justify-content:center;margin-top:24px}
+.modal-actions .btn{flex:1;max-width:150px}
+
+/* ============ TopBar ============ */
+.topbar{background:var(--primary);color:#fff;padding:16px 16px;font-size:var(--font-lg);font-weight:700;display:flex;align-items:center;gap:12px}
+.topbar .back-btn{font-size:24px;cursor:pointer;background:none;border:none;color:#fff;padding:4px 8px}
+
+/* ============ Home Page ============ */
+.hero{background:linear-gradient(135deg,#FF6B6B,#FF8E8E,#FFA07A);padding:32px 20px;display:flex;align-items:center;justify-content:space-between;border-radius:0 0 32px 32px;margin-bottom:20px;color:#fff}
+.hero-title{font-size:26px;font-weight:800;display:block;margin-bottom:6px}
+.hero-subtitle{font-size:var(--font-sm);opacity:.9}
+.hero-mascot{font-size:64px;animation:float 3s ease-in-out infinite}
+.star-summary{margin:0 4px 16px}
+.star-count-num{font-size:28px;font-weight:800;color:#F39C12}
+.subject-card{background:#fff;border-radius:var(--radius-lg);padding:24px;margin-bottom:16px;box-shadow:var(--shadow);border:3px solid #EEE;cursor:pointer;transition:transform .15s}
+.subject-card:active{transform:scale(.97)}
+.subject-mascot{font-size:56px;text-align:center;margin-bottom:12px}
+.subject-info{text-align:center;margin-bottom:16px}
+.subject-name{font-size:var(--font-xl);font-weight:700}
+.subject-desc{font-size:var(--font-sm);color:var(--text-light);margin-top:4px}
+.progress-bar{height:12px;background:#F0F0F0;border-radius:var(--radius-round);overflow:hidden;margin-bottom:6px}
+.progress-fill{height:100%;border-radius:var(--radius-round);transition:width .5s}
+.progress-text{font-size:var(--font-xs);text-align:right;display:block}
+.subject-btn{display:flex;align-items:center;justify-content:center;padding:14px;border-radius:var(--radius-round);color:#fff;font-size:var(--font-md);font-weight:600;margin-top:12px}
+
+/* ============ Subject Page ============ */
+.subject-header{padding:32px 20px;display:flex;align-items:center;justify-content:space-between;border-radius:0 0 32px 32px;margin-bottom:20px;color:#fff}
+.subject-header .header-icon{font-size:40px}
+.subject-header .header-title{font-size:28px;font-weight:800}
+.subject-header .header-progress{font-size:var(--font-sm);opacity:.9}
+.unit-item{display:flex;align-items:center;background:#fff;border-radius:var(--radius-lg);padding:20px 16px;margin-bottom:14px;box-shadow:var(--shadow);cursor:pointer;transition:transform .15s}
+.unit-item:active{transform:scale(.97)}
+.unit-item.locked{opacity:.5}
+.unit-item.completed{border-left:5px solid #2ECC71}
+.unit-number{width:52px;height:52px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:22px;font-weight:700;color:#fff;margin-right:16px;flex-shrink:0}
+.unit-info{flex:1}
+.unit-title{font-size:var(--font-md);font-weight:700}
+.unit-subtitle{font-size:var(--font-xs);color:var(--text-light)}
+.unit-stars{font-size:20px;margin-top:4px}
+.unit-arrow{font-size:22px;margin-left:8px;opacity:.5}
+
+/* ============ Lesson Page ============ */
+.lesson-tabs{display:flex;gap:10px;overflow-x:auto;padding:12px 4px;-webkit-overflow-scrolling:touch;scrollbar-width:none}
+.lesson-tabs::-webkit-scrollbar{display:none}
+.lesson-tab{flex-shrink:0;padding:10px 22px;background:#fff;border-radius:var(--radius-round);font-size:var(--font-sm);color:var(--text-light);box-shadow:var(--shadow);cursor:pointer;border:none;white-space:nowrap}
+.lesson-tab.active{background:var(--primary);color:#fff;font-weight:600}
+.knowledge-card{background:#fff;border-radius:var(--radius-lg);padding:28px 20px;margin:16px 4px;box-shadow:var(--shadow-lg);min-height:400px}
+.card-title-row{display:flex;align-items:center;gap:10px;margin-bottom:24px;padding-bottom:16px;border-bottom:2px dashed #F0F0F0}
+.card-emoji{font-size:40px}
+.card-title{font-size:var(--font-xl);font-weight:700}
+.card-content{font-size:var(--font-md);line-height:2;white-space:pre-line}
+.card-nav{display:flex;align-items:center;justify-content:center;gap:20px;margin-top:16px}
+.card-indicator{font-size:var(--font-sm);color:var(--text-light)}
+
+/* ============ Exercise Page ============ */
+.ex-progress{display:flex;align-items:center;gap:12px;margin-bottom:16px}
+.ex-progress .bar{flex:1;height:8px;background:#F0F0F0;border-radius:var(--radius-round);overflow:hidden}
+.ex-progress .bar-fill{height:100%;background:linear-gradient(to right,var(--primary),var(--secondary));border-radius:var(--radius-round);transition:width .3s}
+.ex-progress-text{font-size:var(--font-sm);color:var(--text-light);white-space:nowrap}
+.question-number{display:inline-block;background:var(--primary);color:#fff;font-size:var(--font-sm);font-weight:700;padding:6px 16px;border-radius:var(--radius-round);margin-bottom:16px}
+.question-text{font-size:var(--font-lg);font-weight:600;line-height:1.6;margin-bottom:24px}
+.option-card{display:flex;align-items:center;background:#fff;border-radius:var(--radius);padding:16px 20px;margin-bottom:12px;box-shadow:var(--shadow);border:3px solid transparent;cursor:pointer;transition:all .15s}
+.option-card:active{transform:scale(.97)}
+.option-label{width:44px;height:44px;border-radius:50%;background:#F0F0F0;display:flex;align-items:center;justify-content:center;font-weight:700;margin-right:16px;flex-shrink:0}
+.option-text{flex:1}
+.option-icon{font-size:24px;margin-left:8px}
+.option-card.selected{border-color:var(--primary);background:#FFF0F0}
+.option-card.selected .option-label{background:var(--primary);color:#fff}
+.option-card.correct{border-color:#2ECC71;background:#F0FFF4}
+.option-card.correct .option-label{background:#2ECC71;color:#fff}
+.option-card.wrong{border-color:#E74C3C;background:#FFF0F0}
+.option-card.wrong .option-label{background:#E74C3C;color:#fff}
+.ex-dots{display:flex;justify-content:center;gap:10px;padding:16px}
+.ex-dot{width:14px;height:14px;border-radius:50%;background:#E0E0E0;transition:all .3s}
+.ex-dot.current{background:var(--primary);transform:scale(1.3);box-shadow:0 0 8px rgba(255,107,107,.4)}
+.ex-dot.correct{background:#2ECC71}
+.ex-dot.wrong{background:#E74C3C}
+.status-txt{font-size:var(--font-sm);font-weight:600;min-height:20px}
+.status-correct{color:#2ECC71}
+.status-wrong{color:#E74C3C}
+
+/* ============ Result Page ============ */
+.result-card{text-align:center;padding:40px 24px}
+.result-emoji{font-size:80px;display:block;margin-bottom:12px}
+.result-message{font-size:var(--font-lg);font-weight:700;display:block;margin-bottom:20px}
+.result-score{display:flex;align-items:baseline;justify-content:center;gap:4px;margin-bottom:12px}
+.result-score .num{font-size:52px;font-weight:800;color:var(--primary)}
+.result-score .divider{font-size:28px;color:var(--text-light)}
+.result-score .total{font-size:28px;color:var(--text-light);margin-right:8px}
+.result-accuracy{font-size:var(--font-md);color:var(--text-light);margin-bottom:16px}
+.result-stars{font-size:48px;margin-bottom:8px;letter-spacing:4px}
+.result-grade{margin-top:16px}
+.result-grade .row{display:flex;justify-content:space-between;padding:10px 0;font-size:var(--font-md);color:var(--text-light)}
+.result-grade .row .val{font-weight:600;color:var(--text)}
+
+/* ============ Reward Page ============ */
+.reward-hero2{background:linear-gradient(135deg,#FFE66D,#FFD93D,#FFC107);border-radius:var(--radius-lg);padding:32px;text-align:center;margin:16px 4px;box-shadow:0 6px 24px rgba(255,217,61,.3)}
+.reward-hero2 .star-icon{font-size:60px;display:block;margin-bottom:8px}
+.reward-hero2 .star-count{font-size:56px;font-weight:900;color:#7B6800}
+.reward-hero2 .star-label{font-size:var(--font-lg);color:#8B7A20;font-weight:600}
+.shop-cat-title{display:flex;align-items:center;justify-content:space-between;margin-bottom:12px;font-weight:700}
+.shop-cat-cost{font-size:var(--font-xs);color:var(--text-light);background:#F5F5F5;padding:4px 14px;border-radius:var(--radius-round)}
+.shop-scroll{display:flex;overflow-x:auto;gap:14px;padding:4px 0 8px;-webkit-overflow-scrolling:touch;scrollbar-width:none}
+.shop-scroll::-webkit-scrollbar{display:none}
+.shop-card2{flex-shrink:0;width:200px;background:#fff;border-radius:var(--radius-lg);padding:22px 16px;box-shadow:var(--shadow);border:3px solid #EEE;text-align:center;cursor:pointer;transition:transform .15s}
+.shop-card2:active{transform:scale(.95)}
+.shop-icon{font-size:44px;display:block;margin-bottom:8px}
+.shop-name{font-size:var(--font-sm);font-weight:700;margin-bottom:4px;display:block}
+.shop-desc{font-size:var(--font-xs);color:var(--text-light);margin-bottom:12px}
+.shop-bottom{display:flex;justify-content:center;align-items:center;gap:8px}
+.shop-price{color:#fff;font-size:var(--font-sm);font-weight:800;padding:6px 16px;border-radius:var(--radius-round)}
+.shop-tag{font-size:var(--font-xs);color:var(--text-light)}
+.history-item{display:flex;align-items:center;gap:10px;padding:12px 18px;background:#fff;border-radius:var(--radius);margin-bottom:8px;box-shadow:var(--shadow)}
+.history-icon{font-size:24px}.history-name{flex:1;font-size:var(--font-sm)}.history-cost{font-size:var(--font-sm);font-weight:700;color:#E74C3C}
+.badge-grid{display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-bottom:24px}
+.badge-card{background:#fff;border-radius:var(--radius);padding:18px 12px;text-align:center;box-shadow:var(--shadow)}
+.badge-card.earned{border:2px solid var(--accent);background:linear-gradient(180deg,#FFFEF0,#FFF9D0)}
+.badge-card.locked{opacity:.5}
+.badge-icon{font-size:40px;display:block;margin-bottom:4px}
+.badge-name{font-size:var(--font-sm);font-weight:700}
+.badge-desc{font-size:var(--font-xs);color:var(--text-light)}
+.badge-status{font-size:var(--font-xs);color:var(--secondary)}
+.stat-card{background:#fff;border-radius:var(--radius);padding:20px;margin-bottom:12px;box-shadow:var(--shadow)}
+.stat-bar{height:12px;background:#F0F0F0;border-radius:var(--radius-round);overflow:hidden;margin:8px 0}
+.stat-fill{height:100%;border-radius:var(--radius-round);transition:width .5s}
+</style>
+</head>
+<body>
+
+<!-- ====== Pages ====== -->
+
+<!-- Home -->
+<div id="page-home" class="page active">
+  <div class="hero">
+    <div>
+      <span class="hero-title">幼小衔接乐园 🎒</span>
+      <span class="hero-subtitle">快乐学习，轻松上小学！</span>
+    </div>
+    <div class="hero-mascot">🚀</div>
+  </div>
+  <div class="container">
+    <div class="card star-summary flex-between" onclick="switchTab('reward')">
+      <div class="flex-center"><span style="font-size:28px;margin-right:8px">⭐</span><span class="star-count-num" id="totalStars">0</span><span style="margin-left:4px;color:var(--text-light)">颗星星</span></div>
+      <span style="font-size:var(--font-sm);color:var(--primary)">查看奖励 →</span>
+    </div>
+    <div class="section-title">选一科开始学习吧！</div>
+    <div id="subjectsList"></div>
+  </div>
+</div>
+
+<!-- Subject -->
+<div id="page-subject" class="page">
+  <div class="topbar"><button class="back-btn" onclick="goHome()">←</button><span id="subjTitle">语文学习</span></div>
+  <div class="container"><div id="unitList"></div></div>
+</div>
+
+<!-- Lesson -->
+<div id="page-lesson" class="page">
+  <div class="topbar"><button class="back-btn" onclick="goSubject()">←</button><span id="lessonTitle"></span></div>
+  <div class="container">
+    <div class="lesson-tabs" id="lessonTabs"></div>
+    <div id="lessonCard"></div>
+    <div style="padding:20px 0 40px;text-align:center"><button class="btn btn-primary btn-lg" id="startExerciseBtn">📝 开始练习</button></div>
+  </div>
+</div>
+
+<!-- Exercise -->
+<div id="page-exercise" class="page">
+  <div class="topbar"><button class="back-btn" onclick="goLesson()">←</button><span id="exTitle">练习</span></div>
+  <div class="container">
+    <div class="ex-progress"><div class="bar"><div class="bar-fill" id="exBar" style="width:0%"></div></div><span class="ex-progress-text" id="exLabel">0/0</span></div>
+    <div class="status-txt" id="exStatus"></div>
+    <div class="card"><div id="exQuestion"></div></div>
+    <div style="display:flex;justify-content:center;gap:20px;margin-top:16px">
+      <button class="btn btn-outline" id="exPrev" onclick="exPrev()">◀ 上一题</button>
+      <button class="btn btn-primary" id="exNext" onclick="exNext()" disabled>下一题 ▶</button>
+    </div>
+    <div class="ex-dots" id="exDots"></div>
+  </div>
+</div>
+
+<!-- Result -->
+<div id="page-result" class="page">
+  <div class="topbar"><button class="back-btn" onclick="goHome()">←</button><span>练习结果</span></div>
+  <div class="container"><div id="resultContent"></div></div>
+</div>
+
+<!-- Reward -->
+<div id="page-reward" class="page">
+  <div class="topbar"><button class="back-btn" onclick="goHome()">←</button><span>⭐ 奖励中心</span></div>
+  <div class="container"><div id="rewardContent"></div></div>
+</div>
+
+<!-- TabBar -->
+<div class="tabbar" id="tabbar">
+  <button class="tab active" onclick="switchTab('home')"><span class="tab-icon">🏠</span>首页</button>
+  <button class="tab" onclick="switchTab('reward')"><span class="tab-icon">⭐</span>奖励</button>
+</div>
+
+<!-- Toast -->
+<div class="toast" id="toast"></div>
+
+<!-- Modal -->
+<div class="modal-mask" id="modalMask" style="display:none"><div class="modal-box" id="modalBox"></div></div>
+
+<script>
+/* ================================================================
+   DATA - 课程数据
+   ================================================================ */
+const COURSES = {
+  chinese: { id:'chinese',name:'语文',icon:'📖',color:'#FF6B6B',desc:'学拼音 · 认汉字 · 会阅读', units:[
+    { id:'chinese-u1',title:'拼音认读',subtitle:'认识单韵母和声调',icon:'🔤',lessons:[
+      { id:'chinese-u1-l1',title:'认识 a o e',type:'pinyin',cards:[
+        { title:'单韵母 a',content:'张大嘴巴 a a a\n像个小姑娘在唱歌\n\n写法：先写半圆，再写竖弯',emoji:'🍎',pinyin:'a'},
+        { title:'单韵母 o',content:'圆圆嘴巴 o o o\n像只大公鸡喔喔叫\n\n写法：从左到右画个圆',emoji:'🐓',pinyin:'o'},
+        { title:'单韵母 e',content:'扁扁嘴巴 e e e\n像只大白鹅在水里\n\n写法：从里往外画半圆，加一横',emoji:'🦢',pinyin:'e'}],
+       exercises:[{q:'下面哪个字母读作"a"？',opts:['o','a','e','i'],ans:1},{q:'"大白鹅"代表哪个字母？',opts:['a','o','e','u'],ans:2},{q:'圆圆嘴巴读什么？',opts:['a','o','e','ü'],ans:1},{q:'哪个字母像小姑娘张大嘴巴？',opts:['e','o','a','i'],ans:2}]},
+      { id:'chinese-u1-l2',title:'认识 i u ü',type:'pinyin',cards:[
+        { title:'单韵母 i',content:'牙齿对齐 i i i\n像根小棍子站直了\n\n写法：先写一竖，再写一点',emoji:'👔',pinyin:'i'},
+        { title:'单韵母 u',content:'嘴巴尖尖 u u u\n像只小乌鸦在树上\n\n写法：先写竖弯，再写一竖',emoji:'🐦',pinyin:'u'},
+        { title:'单韵母 ü',content:'嘴巴圆圆吹口哨 ü ü ü\n像只小鱼在吐泡泡\n\n写法：u上面加两点',emoji:'🐟',pinyin:'ü'}],
+       exercises:[{q:'牙齿对齐读什么？',opts:['u','ü','i','e'],ans:2},{q:'哪个字母上有两个点？',opts:['i','u','ü','a'],ans:2},{q:'像小乌鸦的是哪个字母？',opts:['i','u','ü','o'],ans:1},{q:'下面哪个是单韵母"i"？',opts:['ɑ','i','ē','ú'],ans:1}]},
+      { id:'chinese-u1-l3',title:'四声调',type:'pinyin',cards:[
+        { title:'认识声调',content:'一声平：ā ō ē\n像汽车在平路上开\n\n二声扬：á ó é\n像汽车在爬山坡\n\n三声拐弯：ǎ ǒ ě\n像汽车先下后上\n\n四声降：à ò è\n像汽车在下山坡',emoji:'🚗',pinyin:''}],
+       exercises:[{q:'"妈"字是第几声？',opts:['第一声','第二声','第三声','第四声'],ans:0},{q:'像汽车爬坡的是第几声？',opts:['第一声','第二声','第三声','第四声'],ans:1},{q:'ā 是第几声？',opts:['第一声','第二声','第三声','第四声'],ans:0},{q:'四声像汽车在做什么？',opts:['平地开','爬山','拐弯','下山'],ans:3}]}
+    ]},
+    { id:'chinese-u2',title:'拼音拼读',subtitle:'声母 b p m f',icon:'🔊',lessons:[
+      { id:'chinese-u2-l1',title:'声母 b p',type:'pinyin',cards:[
+        { title:'声母 b',content:'右下半圆 b b b\n像个数字6倒过来\n\n拼读举例：\nbā 八  bá 拔  bǎ 把  bà 爸',emoji:'🅱️',pinyin:'b'},
+        { title:'声母 p',content:'右上半圆 p p p\n像个小旗迎风飘\n\n拼读举例：\npā 趴  pá 爬  pà 怕',emoji:'⛳',pinyin:'p'}],
+       exercises:[{q:'b 像什么？',opts:['数字6倒过来','小旗','门洞','小棍'],ans:0},{q:'pā 是第几声？',opts:['第一声','第二声','第三声','第四声'],ans:0},{q:'"爸爸"的爸拼音里有什么声母？',opts:['p','b','m','f'],ans:1},{q:'右上半圆是什么声母？',opts:['b','p','d','q'],ans:1}]},
+      { id:'chinese-u2-l2',title:'声母 m f',type:'pinyin',cards:[
+        { title:'声母 m',content:'两个门洞 m m m\n像两扇大门并排开\n\n拼读举例：\nmā 妈  má 麻  mǎ 马  mà 骂',emoji:'Ⓜ️',pinyin:'m'},
+        { title:'声母 f',content:'一根拐棍 f f f\n像老爷爷用的拐杖\n\n拼读举例：\nfā 发  fá 罚  fǎ 法  fà 发',emoji:'🌸',pinyin:'f'}],
+       exercises:[{q:'两个门洞是什么声母？',opts:['b','p','m','f'],ans:2},{q:'f 像什么？',opts:['门洞','拐棍','小旗','半圆'],ans:1},{q:'"妈妈"的拼音开头是什么声母？',opts:['b','p','m','f'],ans:2},{q:'fā 的第1个字母是什么？',opts:['b','p','m','f'],ans:3}]}
+    ]},
+    { id:'chinese-u3',title:'拼音综合',subtitle:'声母 d t n l g k h',icon:'🎯',lessons:[
+      { id:'chinese-u3-l1',title:'声母 d t n l',type:'pinyin',cards:[
+        { title:'d t n l',content:'d：左下半圆 d d d（马蹄声）\nt：伞柄朝下 t t t\nn：一个门洞 n n n\nl：一根小棍 l l l\n\n拼读：dà 大  tā 他  nǐ 你  lè 乐',emoji:'🎵',pinyin:''}],
+       exercises:[{q:'左下半圆是什么声母？',opts:['b','p','d','q'],ans:2},{q:'t 像什么？',opts:['拐棍','伞柄','门洞','小棍'],ans:1},{q:'一个门洞是什么声母？',opts:['m','n','h','w'],ans:1},{q:'"你好"的"你"拼音里有哪个声母？',opts:['d','t','n','l'],ans:2}]},
+      { id:'chinese-u3-l2',title:'声母 g k h',type:'pinyin',cards:[
+        { title:'g k h',content:'g：9字加弯 g g g\nk：像挺机关枪 k k k\nh：像把椅子 h h h\n\n拼读：gē 歌  kū 哭  hā 哈',emoji:'🎸',pinyin:''}],
+       exercises:[{q:'9字加弯是什么声母？',opts:['g','q','p','b'],ans:0},{q:'h 像什么？',opts:['椅子','机关枪','9','伞柄'],ans:0},{q:'"哈哈"的拼音开头是哪个声母？',opts:['g','k','h','f'],ans:2},{q:'像机关枪的是哪个声母？',opts:['g','k','h','j'],ans:1}]}
+    ]},
+    { id:'chinese-u4',title:'汉字笔画',subtitle:'认识基本笔画',icon:'✏️',lessons:[
+      { id:'chinese-u4-l1',title:'基本笔画（一）',type:'hanzi',cards:[
+        { title:'横、竖、撇、捺',content:'横（一）：从左到右，平平的\n竖（丨）：从上到下，直直的\n撇（丿）：从右上到左下\n捺（㇏）：从左上到右下\n\n口诀：横平竖直撇有尖，捺要有脚才好看',emoji:'🖊️',pinyin:''}],
+       exercises:[{q:'从左到右平平的笔画叫什么？',opts:['横','竖','撇','捺'],ans:0},{q:'从上到下直直的笔画叫什么？',opts:['横','竖','撇','捺'],ans:1},{q:'从右上到左下的笔画叫什么？',opts:['横','竖','撇','捺'],ans:2},{q:'捺是从哪个方向到哪个方向？',opts:['左上到右下','右上到左下','左到右','上到下'],ans:0}]},
+      { id:'chinese-u4-l2',title:'基本笔画（二）',type:'hanzi',cards:[
+        { title:'点、提、折、钩',content:'点（丶）：轻轻一点\n提（㇀）：从左下到右上\n横折（𠃍）：横 + 竖的转角\n竖钩（亅）：竖 + 向左小钩\n\n口诀：点像小雨轻轻落，折像拐弯要记住',emoji:'📝',pinyin:''}],
+       exercises:[{q:'轻轻一点的笔画叫什么？',opts:['横','竖','点','折'],ans:2},{q:'横加竖的转角叫什么？',opts:['横折','竖折','撇折','弯钩'],ans:0},{q:'点像什么？',opts:['小棍','小雨','小刀','小伞'],ans:1}]}
+    ]},
+    { id:'chinese-u5',title:'常用汉字',subtitle:'认识身边常用字',icon:'📝',lessons:[
+      { id:'chinese-u5-l1',title:'人体和数字',type:'hanzi',cards:[
+        { title:'人、口、手、目',content:'人（rén）：一撇一捺，顶天立地 👤\n口（kǒu）：方方正正一张嘴 👄\n手（shǒu）：五指张开能做事 ✋\n目（mù）：方框里面有两横 👁️\n\n组词：大人、口水、小手、目光',emoji:'👤',pinyin:''}],
+       exercises:[{q:'一撇一捺是什么字？',opts:['大','人','八','入'],ans:1},{q:'"口"字像什么？',opts:['眼睛','嘴巴','鼻子','耳朵'],ans:1},{q:'"目"是哪个身体部位？',opts:['嘴巴','手','眼睛','脚'],ans:2},{q:'哪个字表示人的五官之一？',opts:['手','大','小','口'],ans:3}]},
+      { id:'chinese-u5-l2',title:'大小和天地',type:'hanzi',cards:[
+        { title:'大、小、上、下',content:'大（dà）：人张开双臂 👐\n小（xiǎo）：中间一竖两边点 🤏\n上（shàng）：一竖一横在上面 ⬆️\n下（xià）：一横一竖在下面 ⬇️\n\n反义词：大↔小  上↔下',emoji:'📏',pinyin:''},
+        { title:'天、地、日、月',content:'天（tiān）：人头顶上是天 🌤️\n地（dì）：土也是地 🌍\n日（rì）：方框中间一横 ☀️\n月（yuè）：弯弯月亮画出来 🌙\n\n组词：天空、大地、日月',emoji:'🌤️',pinyin:''}],
+       exercises:[{q:'"大"的反义词是什么？',opts:['多','小','高','长'],ans:1},{q:'"上"的反义词是什么？',opts:['左','右','下','前'],ans:2},{q:'哪个字表示太阳？',opts:['月','天','日','星'],ans:2},{q:'"人"头顶上是什么字？',opts:['地','天','大','上'],ans:1}]}
+    ]},
+    { id:'chinese-u6',title:'简单阅读',subtitle:'读句子、看图说话',icon:'📚',lessons:[
+      { id:'chinese-u6-l1',title:'读一读',type:'reading',cards:[
+        { title:'句子朗读',content:'读一读下面的句子：\n\n1. 我是小学生。\n2. 我爱爸爸妈妈。\n3. 天上有太阳和白云。\n4. 小鸟在树上唱歌。\n5. 春天来了，花开了。\n\n每个句子读三遍，注意停顿！',emoji:'🗣️',pinyin:''}],
+       exercises:[{q:'"我是小学生"有几个字？',opts:['4个','5个','6个','7个'],ans:1},{q:'"我爱爸爸妈妈"这句话里有谁？',opts:['只有爸爸','只有妈妈','爸爸和妈妈','爷爷和奶奶'],ans:2},{q:'小鸟在哪里唱歌？',opts:['地上','水里','树上','天空'],ans:2},{q:'春天来了，什么开了？',opts:['门','花','窗','灯'],ans:1}]}
+    ]}
+  ]},
+  math: { id:'math',name:'数学',icon:'🔢',color:'#4ECDC4',desc:'数数、计算、认识图形', units:[
+    { id:'math-u1',title:'数数 1-10',subtitle:'认识数字，数物对应',icon:'🔟',lessons:[
+      { id:'math-u1-l1',title:'认识 1-5',type:'number',cards:[{ title:'数字 1-5',content:'1 像铅笔细又长 ✏️\n2 像鸭子水中游 🦆\n3 像耳朵听声音 👂\n4 像小旗迎风飘 🚩\n5 像钩子挂东西 🪝\n\n数一数：🍎=1  🍎🍎=2  🍎🍎🍎=3',emoji:'✏️',pinyin:''}],exercises:[{q:'2 像什么？',opts:['铅笔','鸭子','耳朵','小旗'],ans:1},{q:'🍎🍎🍎 是几个？',opts:['1','2','3','4'],ans:2},{q:'5 像什么？',opts:['耳朵','小旗','钩子','鸭子'],ans:2},{q:'3和4哪个大？',opts:['3大','4大','一样大'],ans:1}]},
+      { id:'math-u1-l2',title:'认识 6-10',type:'number',cards:[{ title:'数字 6-10',content:'6 像口哨吹得响 🎵\n7 像拐杖墙上靠 🦯\n8 像葫芦藤上挂 🏺\n9 像气球飞上天 🎈\n10 像油条加鸡蛋 🥖🥚\n\n从1数到10：1 2 3 4 5 6 7 8 9 10',emoji:'🎵',pinyin:''}],exercises:[{q:'8 像什么？',opts:['口哨','拐杖','葫芦','气球'],ans:2},{q:'6后面是几？',opts:['5','7','8','4'],ans:1},{q:'10 是几位数？',opts:['一位数','两位数','三位数'],ans:1},{q:'9和10哪个大？',opts:['9大','10大','一样大'],ans:1}]}
+    ]},
+    { id:'math-u2',title:'比一比',subtitle:'大小、多少、高矮、长短',icon:'⚖️',lessons:[
+      { id:'math-u2-l1',title:'大小和多少',type:'compare',cards:[{ title:'比大小 比多少',content:'比大小：\n🐘 大象大，🐭 老鼠小\n🏀 篮球大，🏓 乒乓球小\n\n比多少：\n🍎🍎🍎🍎（4个）> 🍎🍎（2个）\n4个苹果比2个苹果多\n\n口诀：排整齐，一对一，多出来的是"多"的',emoji:'🐘',pinyin:''}],exercises:[{q:'大象和老鼠，谁大？',opts:['大象','老鼠','一样大'],ans:0},{q:'5个苹果和3个苹果，哪个多？',opts:['5个多','3个多','一样多'],ans:0},{q:'比较多少要用什么方法？',opts:['随便比','一对一排整齐','猜一猜'],ans:1}]},
+      { id:'math-u2-l2',title:'高矮和长短',type:'compare',cards:[{ title:'比高矮 比长短',content:'比高矮：\n🦒 长颈鹿高，🐧 企鹅矮\n爸爸高，宝宝矮\n\n比长短：\n✏️✏️✏️ 长铅笔\n✏️ 短铅笔\n\n口诀：放在一起比一比，高矮长短看仔细',emoji:'🦒',pinyin:''}],exercises:[{q:'长颈鹿和企鹅，谁高？',opts:['长颈鹿','企鹅','一样高'],ans:0},{q:'3支铅笔和1支铅笔，哪个长？',opts:['3支的更长','1支的更长','一样长'],ans:0},{q:'比高矮要把物体怎么样？',opts:['随便放','放在一起对齐','远远地看'],ans:1}]}
+    ]},
+    { id:'math-u3',title:'数数 11-20',subtitle:'十位制初步、凑十法',icon:'🧮',lessons:[
+      { id:'math-u3-l1',title:'认识 11-15',type:'number',cards:[{ title:'11-15',content:'10+1=11  十一\n10+2=12  十二\n10+3=13  十三\n10+4=14  十四\n10+5=15  十五\n\n1个十和几个一合起来就是十几\n\n📦(10个) + 🍎 = 11',emoji:'📦',pinyin:''}],exercises:[{q:'10+3等于多少？',opts:['11','12','13','14'],ans:2},{q:'15里面有1个十和几个一？',opts:['3个','4个','5个','6个'],ans:2},{q:'1个十和2个一合起来是？',opts:['11','12','13','14'],ans:1},{q:'十位制中，十位上的1表示什么？',opts:['1个','1个十','1个百'],ans:1}]},
+      { id:'math-u3-l2',title:'认识 16-20',type:'number',cards:[{ title:'16-20',content:'10+6=16  十六\n10+7=17  十七\n10+8=18  十八\n10+9=19  十九\n10+10=20  二十\n\n2个十就是20！\n\n数数歌：11 12 13 14 15  16 17 18 19 20',emoji:'🎉',pinyin:''}],exercises:[{q:'10+8等于多少？',opts:['16','17','18','19'],ans:2},{q:'20里面有2个什么？',opts:['一','十','百'],ans:1},{q:'19是由什么组成的？',opts:['1个十和9个一','9个十和1个一','19个一'],ans:0}]}
+    ]},
+    { id:'math-u4',title:'10以内加减',subtitle:'分与合、加减意义',icon:'➕',lessons:[
+      { id:'math-u4-l1',title:'分与合',type:'calculate',cards:[{ title:'数的分与合',content:'5可以分成：\n5=1+4  5=2+3\n5=3+2  5=4+1  5=5+0\n\n手指游戏：\n一只手5根手指，弯下2根，还剩3根\n5可以分成2和3\n\n试一试：6可以分成几和几？',emoji:'🖐️',pinyin:''}],exercises:[{q:'5可以分成2和几？',opts:['2','3','4','1'],ans:1},{q:'一只手有几根手指？',opts:['4','5','6','10'],ans:1},{q:'3和3合起来是几？',opts:['5','6','7','4'],ans:1},{q:'8可以分成4和几？',opts:['2','3','4','5'],ans:2}]},
+      { id:'math-u4-l2',title:'10以内加减法',type:'calculate',cards:[{ title:'加法和减法',content:'加法：把东西合起来\n🍎🍎 + 🍎🍎🍎 = 5个苹果\n2 + 3 = 5\n\n减法：从里面拿走\n🍎🍎🍎🍎🍎 - 🍎🍎 = 3个苹果\n5 - 2 = 3\n\n口诀：总数里面去掉一部分，剩下的就是减法答案',emoji:'🍎',pinyin:''}],exercises:[{q:'2+3等于多少？',opts:['4','5','6','3'],ans:1},{q:'7-3等于多少？',opts:['3','4','5','10'],ans:1},{q:'小明有4颗糖，吃了1颗，还剩几颗？',opts:['2','3','4','5'],ans:1},{q:'8+2等于多少？',opts:['9','10','8','6'],ans:1}]}
+    ]},
+    { id:'math-u5',title:'20以内加减',subtitle:'不进位加法、不退位减法',icon:'🎯',lessons:[
+      { id:'math-u5-l1',title:'20以内加法',type:'calculate',cards:[{ title:'不进位加法',content:'个位加个位，十位不变\n\n例：12+3=?\n12=10+2\n2+3=5\n10+5=15\n所以12+3=15 ✅\n\n练一练：11+5=? 13+4=? 15+2=?',emoji:'🧮',pinyin:''}],exercises:[{q:'12+3等于多少？',opts:['14','15','16','13'],ans:1},{q:'11+5等于多少？',opts:['15','16','17','14'],ans:1},{q:'14+4等于多少？',opts:['16','17','18','19'],ans:2},{q:'10+8等于多少？',opts:['16','17','18','19'],ans:2}]},
+      { id:'math-u5-l2',title:'20以内减法',type:'calculate',cards:[{ title:'不退位减法',content:'个位减个位，十位不变\n\n例：17-4=?\n17=10+7\n7-4=3\n10+3=13\n所以17-4=13 ✅\n\n练一练：15-3=? 18-5=? 16-2=?',emoji:'➖',pinyin:''}],exercises:[{q:'17-4等于多少？',opts:['12','13','14','11'],ans:1},{q:'15-3等于多少？',opts:['11','12','13','10'],ans:1},{q:'16-2等于多少？',opts:['13','14','12','15'],ans:1},{q:'19-7等于多少？',opts:['11','12','10','13'],ans:1}]}
+    ]},
+    { id:'math-u6',title:'认识图形',subtitle:'长方体、正方体、圆柱、球',icon:'🔮',lessons:[
+      { id:'math-u6-l1',title:'立体图形',type:'shape',cards:[{ title:'四种立体图形',content:'长方体 📦\n像盒子、书本、冰箱，6个面都是长方形\n\n正方体 🎲\n像骰子、魔方，6个面都是正方形\n\n圆柱 🥫\n像罐头、水杯，上下两个圆\n\n球 ⚽\n像足球、篮球，圆圆的，到处滚',emoji:'📦',pinyin:''}],exercises:[{q:'盒子是什么形状？',opts:['正方体','长方体','圆柱','球'],ans:1},{q:'足球是什么形状？',opts:['正方体','长方体','圆柱','球'],ans:3},{q:'罐头是什么形状？',opts:['正方体','长方体','圆柱','球'],ans:2},{q:'正方体有几个面？',opts:['4个','5个','6个','8个'],ans:2}]}
+    ]},
+    { id:'math-u7',title:'九九乘法表',subtitle:'1~9 乘法口诀背诵与练习',icon:'✖️',lessons:[
+      { id:'math-u7-l1',title:'1~3 的乘法',type:'multiply',cards:[
+        { title:'1的乘法口诀',content:'1×1=1 一一得一\n1×2=2 一二得二\n1×3=3 一三得三\n1×4=4 一四得四\n1×5=5 一五得五\n1×6=6 一六得六\n1×7=7 一七得七\n1×8=8 一八得八\n1×9=9 一九得九\n\n1乘任何数都等于它自己！',emoji:'1️⃣',pinyin:''},
+        { title:'2的乘法口诀',content:'2×1=2 一二得二\n2×2=4 二二得四\n2×3=6 二三得六\n2×4=8 二四得八\n2×5=10 二五一十\n2×6=12 二六十二\n2×7=14 二七十四\n2×8=16 二八十六\n2×9=18 二九十八\n\n2乘任何数，就是把那个数翻一倍！',emoji:'2️⃣',pinyin:''},
+        { title:'3的乘法口诀',content:'3×1=3 一三得三\n3×2=6 二三得六\n3×3=9 三三得九\n3×4=12 三四十二\n3×5=15 三五十五\n3×6=18 三六十八\n3×7=21 三七二十一\n3×8=24 三八二十四\n3×9=27 三九二十七\n\n用连加理解：3×4 = 3+3+3+3',emoji:'3️⃣',pinyin:''}],
+       exercises:[{q:'2×3 等于多少？',opts:['5','6','7','8'],ans:1},{q:'3×4 等于多少？',opts:['10','11','12','14'],ans:2},{q:'1×8 等于多少？',opts:['7','8','9','1'],ans:1},{q:'2×5 等于多少？',opts:['8','9','10','12'],ans:2},{q:'3×3 等于多少？',opts:['6','8','9','12'],ans:2},{q:'2×7 等于多少？',opts:['12','14','16','18'],ans:1}]},
+      { id:'math-u7-l2',title:'4~6 的乘法',type:'multiply',cards:[
+        { title:'4的乘法口诀',content:'4×1=4 一四得四\n4×2=8 二四得八\n4×3=12 三四十二\n4×4=16 四四十六\n4×5=20 四五二十\n4×6=24 四六二十四\n4×7=28 四七二十八\n4×8=32 四八三十二\n4×9=36 四九三十六\n\n规律：4乘的结果个位是4、8、2、6、0循环',emoji:'4️⃣',pinyin:''},
+        { title:'5的乘法口诀',content:'5×1=5 一五得五\n5×2=10 二五一十\n5×3=15 三五十五\n5×4=20 四五二十\n5×5=25 五五二十五\n5×6=30 五六三十\n5×7=35 五七三十五\n5×8=40 五八四十\n5×9=45 五九四十五\n\n最好记！个位不是5就是0！',emoji:'5️⃣',pinyin:''},
+        { title:'6的乘法口诀',content:'6×1=6 一六得六\n6×2=12 二六十二\n6×3=18 三六十八\n6×4=24 四六二十四\n6×5=30 五六三十\n6×6=36 六六三十六\n6×7=42 六七四十二\n6×8=48 六八四十八\n6×9=54 六九五十四',emoji:'6️⃣',pinyin:''}],
+       exercises:[{q:'4×5 等于多少？',opts:['16','18','20','24'],ans:2},{q:'5×7 等于多少？',opts:['30','35','40','45'],ans:1},{q:'6×3 等于多少？',opts:['15','16','18','21'],ans:2},{q:'4×8 等于多少？',opts:['28','30','32','36'],ans:2},{q:'5×6 等于多少？',opts:['25','30','35','40'],ans:1},{q:'6×7 等于多少？',opts:['36','40','42','48'],ans:2}]},
+      { id:'math-u7-l3',title:'7~9 的乘法',type:'multiply',cards:[
+        { title:'7的乘法口诀',content:'7×1=7 一七得七\n7×2=14 二七十四\n7×3=21 三七二十一\n7×4=28 四七二十八\n7×5=35 五七三十五\n7×6=42 六七四十二\n7×7=49 七七四十九\n7×8=56 七八五十六\n7×9=63 七九六十三',emoji:'7️⃣',pinyin:''},
+        { title:'8的乘法口诀',content:'8×1=8 一八得八\n8×2=16 二八十六\n8×3=24 三八二十四\n8×4=32 四八三十二\n8×5=40 五八四十\n8×6=48 六八四十八\n8×7=56 七八五十六\n8×8=64 八八六十四\n8×9=72 八九七十二',emoji:'8️⃣',pinyin:''},
+        { title:'9的乘法口诀',content:'9×1=9 一九得九\n9×2=18 二九十八\n9×3=27 三九二十七\n9×4=36 四九三十六\n9×5=45 五九四十五\n9×6=54 六九五十四\n9×7=63 七九六十三\n9×8=72 八九七十二\n9×9=81 九九八十一\n\n🌵 手指记忆法：弯下第几根手指，左边是十位，右边是个位！',emoji:'9️⃣',pinyin:''}],
+       exercises:[{q:'7×8 等于多少？',opts:['54','56','58','63'],ans:1},{q:'8×7 等于多少？',opts:['54','56','58','63'],ans:1},{q:'9×9 等于多少？',opts:['72','78','81','90'],ans:2},{q:'7×5 等于多少？',opts:['30','32','35','40'],ans:2},{q:'8×6 等于多少？',opts:['42','46','48','52'],ans:2},{q:'9×7 等于多少？',opts:['56','60','63','68'],ans:2}]},
+      { id:'math-u7-l4',title:'乘法大挑战',type:'multiply',cards:[
+        { title:'九九乘法表总复习',content:'完整乘法表（45句口诀）：\n\n一列：一一得一 ~ 一九得九\n二列：一二得二 ~ 二九十八\n三列：一三得三 ~ 三九二十七\n四列：一四得四 ~ 四九三十六\n五列：一五得五 ~ 五九四十五\n六列：一六得六 ~ 六九五十四\n七列：一七得七 ~ 七九六十三\n八列：一八得八 ~ 八九七十二\n九列：一九得九 ~ 九九八十一\n\n背熟乘法表，计算快如飞！🚀',emoji:'🏆',pinyin:''}],
+       exercises:[{q:'6×8 等于多少？',opts:['42','48','52','56'],ans:1},{q:'7×9 等于多少？',opts:['56','60','63','72'],ans:2},{q:'8×8 等于多少？',opts:['56','60','64','72'],ans:2},{q:'9×6 等于多少？',opts:['48','52','54','58'],ans:2},{q:'5×8 等于多少？',opts:['35','40','45','48'],ans:1},{q:'4×9 等于多少？',opts:['28','32','36','40'],ans:2},{q:'7×7 等于多少？',opts:['42','47','49','56'],ans:2},{q:'3×8 等于多少？',opts:['21','24','27','32'],ans:1}]}
+    ]}
+  ]},
+  english: { id:'english',name:'英语',icon:'🔤',color:'#A78BFA',desc:'认字母、学单词、说口语', units:[
+    { id:'english-u1',title:'字母 A - H',subtitle:'大小写认读 + 书写',icon:'🅰️',lessons:[
+      { id:'english-u1-l1',title:'A B C D',type:'letter',cards:[
+        { title:'字母 A a',content:'A 像一座尖尖塔 🔺\na 像圆圆小苹果 🍎\n\nA is for Apple 苹果\n发音：/æ/（张大嘴）\n跟我读：A A A, /æ/ /æ/ /æ/',emoji:'🍎',pinyin:''},
+        { title:'字母 B b',content:'B 像两个大肚子 🐻\nb 像一个小棒球 ⚾\n\nB is for Bear 小熊\n发音：/b/（闭嘴唇）\n跟我读：B B B, /b/ /b/ /b/',emoji:'🐻',pinyin:''},
+        { title:'字母 C c',content:'C 像弯弯小月亮 🌙\n\nC is for Cat 小猫\n发音：/k/（喉咙发声）\n跟我读：C C C, /k/ /k/ /k/',emoji:'🐱',pinyin:''},
+        { title:'字母 D d',content:'D 像半个大月饼 🌓\nd 像小鼓咚咚敲 🥁\n\nD is for Dog 小狗\n发音：/d/（舌尖顶上颚）\n跟我读：D D D, /d/ /d/ /d/',emoji:'🐶',pinyin:''}],
+       exercises:[{q:'A is for ___?',opts:['Bear','Apple','Cat','Dog'],ans:1},{q:'B is for ___?',opts:['Apple','Dog','Bear','Cat'],ans:2},{q:'哪个字母像月亮？',opts:['A','B','C','D'],ans:2},{q:'D is for ___?',opts:['Cat','Apple','Bear','Dog'],ans:3}]},
+      { id:'english-u1-l2',title:'E F G H',type:'letter',cards:[
+        { title:'字母 E-H',content:'E is for Egg 鸡蛋 🥚\nF is for Fish 小鱼 🐟\nG is for Goat 山羊 🐐\nH is for Hat 帽子 🎩\n\n发音：E:/e/(嘴巴扁扁) F:/f/(上牙咬下唇) G:/g/(喉咙发声) H:/h/(轻轻哈气)',emoji:'🥚',pinyin:''}],
+       exercises:[{q:'E is for ___?',opts:['Fish','Egg','Goat','Hat'],ans:1},{q:'F is for ___?',opts:['Egg','Hat','Fish','Goat'],ans:2},{q:'H is for ___?',opts:['Fish','Goat','Hat','Egg'],ans:2},{q:'G is for ___?',opts:['Hat','Egg','Fish','Goat'],ans:3}]}
+    ]},
+    { id:'english-u2',title:'字母 I - P',subtitle:'大小写认读 + 书写',icon:'ℹ️',lessons:[
+      { id:'english-u2-l1',title:'I J K L',type:'letter',cards:[
+        { title:'I J K L',content:'I is for Ice cream 冰淇淋 🍦\nJ is for Juice 果汁 🧃\nK is for Kite 风筝 🪁\nL is for Lion 狮子 🦁\n\n发音：I:/aɪ/ J:/dʒ/ K:/k/ L:/l/',emoji:'🍦',pinyin:''}],
+       exercises:[{q:'I is for ___?',opts:['Juice','Lion','Ice cream','Kite'],ans:2},{q:'K is for ___?',opts:['Ice cream','Kite','Juice','Lion'],ans:1},{q:'L is for ___?',opts:['Kite','Juice','Ice cream','Lion'],ans:3},{q:'J is for ___?',opts:['Lion','Ice cream','Juice','Kite'],ans:2}]},
+      { id:'english-u2-l2',title:'M N O P',type:'letter',cards:[
+        { title:'M N O P',content:'M is for Monkey 猴子 🐵\nN is for Nose 鼻子 👃\nO is for Orange 橙子 🍊\nP is for Pig 小猪 🐷\n\n发音：M:/m/ N:/n/ O:/əʊ/ P:/p/',emoji:'🐵',pinyin:''}],
+       exercises:[{q:'M is for ___?',opts:['Nose','Monkey','Orange','Pig'],ans:1},{q:'O is for ___?',opts:['Monkey','Pig','Orange','Nose'],ans:2},{q:'P is for ___?',opts:['Orange','Nose','Monkey','Pig'],ans:3},{q:'N is for ___?',opts:['Pig','Orange','Nose','Monkey'],ans:2}]}
+    ]},
+    { id:'english-u3',title:'字母 Q - Z',subtitle:'大小写认读 + 书写',icon:'🇶',lessons:[
+      { id:'english-u3-l1',title:'Q R S T',type:'letter',cards:[
+        { title:'Q R S T',content:'Q is for Queen 女王 👑\nR is for Rabbit 兔子 🐰\nS is for Sun 太阳 ☀️\nT is for Tiger 老虎 🐯\n\n发音：Q:/kw/ R:/r/(卷舌头) S:/s/(像蛇) T:/t/',emoji:'👑',pinyin:''}],
+       exercises:[{q:'Q is for ___?',opts:['Rabbit','Queen','Sun','Tiger'],ans:1},{q:'S is for ___?',opts:['Queen','Tiger','Sun','Rabbit'],ans:2},{q:'哪个字母发音像蛇？',opts:['Q','R','S','T'],ans:2}]},
+      { id:'english-u3-l2',title:'U V W X Y Z',type:'letter',cards:[
+        { title:'U-Z',content:'U is for Umbrella 雨伞 ☂️\nV is for Violin 小提琴 🎻\nW is for Water 水 💧\nX is for X-ray X光 🩻\nY is for Yellow 黄色 💛\nZ is for Zebra 斑马 🦓\n\n26个字母学完啦！真棒！🎉',emoji:'🎉',pinyin:''}],
+       exercises:[{q:'U is for ___?',opts:['Violin','Umbrella','Water','Yellow'],ans:1},{q:'Z is for ___?',opts:['Yellow','Water','Zebra','Umbrella'],ans:2},{q:'W is for ___?',opts:['Zebra','Umbrella','Yellow','Water'],ans:3},{q:'英语一共有几个字母？',opts:['24个','26个','28个','30个'],ans:1}]}
+    ]},
+    { id:'english-u4',title:'颜色和数字',subtitle:'Colors & Numbers',icon:'🌈',lessons:[
+      { id:'english-u4-l1',title:'常见颜色',type:'word',cards:[
+        { title:'Colors 颜色',content:'Red 🔴 红色\nBlue 🔵 蓝色\nYellow 🟡 黄色\nGreen 🟢 绿色\n\n句型：\nWhat color is it? 这是什么颜色？\nIt\'s red. 它是红色的。\nI like blue. 我喜欢蓝色。',emoji:'🌈',pinyin:''}],
+       exercises:[{q:'Red 是什么意思？',opts:['蓝色','红色','绿色','黄色'],ans:1},{q:'Blue 是什么意思？',opts:['红色','黄色','蓝色','绿色'],ans:2},{q:'"我喜欢蓝色"用英语怎么说？',opts:['I like red','I like blue','I like green','I like yellow'],ans:1},{q:'Green 是什么颜色？',opts:['红色','蓝色','黄色','绿色'],ans:3}]},
+      { id:'english-u4-l2',title:'数字 1-10',type:'word',cards:[
+        { title:'Numbers 1-10',content:'One 1️⃣ 一\nTwo 2️⃣ 二\nThree 3️⃣ 三\nFour 4️⃣ 四\nFive 5️⃣ 五\nSix 6️⃣ 六\nSeven 7️⃣ 七\nEight 8️⃣ 八\nNine 9️⃣ 九\nTen 🔟 十\n\n句型：How many? 多少个？\nThree apples. 三个苹果。',emoji:'🔢',pinyin:''}],
+       exercises:[{q:'Three 是数字几？',opts:['1','2','3','4'],ans:2},{q:'Five 是数字几？',opts:['4','5','6','7'],ans:1},{q:'Eight 是数字几？',opts:['6','7','8','9'],ans:2},{q:'"多少个"用英语怎么说？',opts:['What color?','How many?','What is it?','Who is it?'],ans:1}]}
+    ]},
+    { id:'english-u5',title:'动物和水果',subtitle:'Animals & Fruits',icon:'🐾',lessons:[
+      { id:'english-u5-l1',title:'可爱的动物',type:'word',cards:[
+        { title:'Animals 动物',content:'Cat 🐱 猫\nDog 🐶 狗\nFish 🐟 鱼\nBird 🐦 鸟\nRabbit 🐰 兔子\nMonkey 🐵 猴子\n\n句型：What\'s this? 这是什么？\nIt\'s a cat. 它是一只猫。',emoji:'🐱',pinyin:''}],
+       exercises:[{q:'Dog 是什么动物？',opts:['猫','狗','鱼','鸟'],ans:1},{q:'Cat 是什么动物？',opts:['狗','鱼','猫','兔子'],ans:2},{q:'Rabbit 是什么动物？',opts:['猫','狗','鱼','兔子'],ans:3},{q:'Bird 是什么动物？',opts:['鱼','鸟','猴子','兔子'],ans:1}]},
+      { id:'english-u5-l2',title:'好吃的水果',type:'word',cards:[
+        { title:'Fruits 水果',content:'Apple 🍎 苹果\nBanana 🍌 香蕉\nOrange 🍊 橙子\nGrape 🍇 葡萄\nWatermelon 🍉 西瓜\n\n句型：Do you like apples?\nYes, I do. / No, I don\'t.',emoji:'🍎',pinyin:''}],
+       exercises:[{q:'Apple 是什么水果？',opts:['香蕉','苹果','橙子','葡萄'],ans:1},{q:'Banana 是什么水果？',opts:['苹果','橙子','香蕉','西瓜'],ans:2},{q:'"你喜欢苹果吗"用英语怎么说？',opts:['I like apples','Do you like apples?','What is it?','Is it an apple?'],ans:1},{q:'Watermelon 是什么？',opts:['苹果','香蕉','葡萄','西瓜'],ans:3}]}
+    ]},
+    { id:'english-u6',title:'日常用语',subtitle:'Daily English',icon:'💬',lessons:[
+      { id:'english-u6-l1',title:'打招呼和礼貌用语',type:'speaking',cards:[
+        { title:'Greetings 打招呼',content:'Hello! / Hi! 你好！👋\nGood morning! 早上好！🌅\nGoodbye! / Bye! 再见！👋\n\nThank you! 谢谢你！🙏\nYou\'re welcome. 不客气。😊\nSorry! 对不起！🙇\n\nPlease. 请。\nExcuse me. 打扰一下。\n\n对话：\nA: Hello! How are you?\nB: I\'m fine, thank you!',emoji:'👋',pinyin:''}],
+       exercises:[{q:'"你好"用英语怎么说？',opts:['Goodbye','Hello','Sorry','Thank you'],ans:1},{q:'"谢谢你"用英语怎么说？',opts:['Sorry','Hello','Goodbye','Thank you'],ans:3},{q:'"对不起"用英语怎么说？',opts:['Please','Sorry','Hello','Thank you'],ans:1},{q:'别人说"Thank you"，你回答？',opts:['Sorry','Goodbye','You\'re welcome','Hello'],ans:2}]}
+    ]}
+  ]}
+};
+
+/* ================================================================
+   STORAGE helpers (replaces wx.storage)
+   ================================================================ */
+const LS = {
+  get(k, def){ try{ const v=localStorage.getItem(k); return v!==null&&v!==undefined?JSON.parse(v):def; }catch(e){ return def; } },
+  set(k,v){ try{ localStorage.setItem(k,JSON.stringify(v)); return true; }catch(e){ return false; } }
+};
+
+function getProgress(){ return LS.get('progress',{chinese:{},math:{},english:{}}); }
+function saveProgress(p){ return LS.set('progress',p); }
+function getTotalStars(){ return LS.get('stars',0); }
+function addStars(n){ const s=getTotalStars()+n; LS.set('stars',s); return s; }
+function spendStars(n){ const s=getTotalStars(); if(s<n) return -1; const r=s-n; LS.set('stars',r); return r; }
+function getBadges(){ return LS.get('badges',[]); }
+function addBadge(b){ const badges=getBadges(); if(!badges.find(x=>x.id===b.id)){ badges.push({...b,earnedAt:Date.now()}); LS.set('badges',badges); return true; } return false; }
+function getExchangeHistory(){ return LS.get('exchanges',[]); }
+function addExchangeRecord(r){ const h=getExchangeHistory(); h.push({...r,exchangedAt:Date.now()}); LS.set('exchanges',h); return h; }
+
+function calculateStars(correct,total){ return correct===total ? 1 : 0; }
+function isUnitUnlocked(units,uIndex,progress){
+  if(uIndex===0) return true;
+  const prev=units[uIndex-1]; const pp=progress[prev.id];
+  return !!(pp&&pp.completed);
+}
+function getSubjCompletion(units,progress){
+  if(!units||!units.length) return 0;
+  let c=0; units.forEach(u=>{ if(progress[u.id]&&progress[u.id].completed) c++; });
+  return Math.round((c/units.length)*100);
+}
+
+/* ================================================================
+   APP STATE
+   ================================================================ */
+let state = {
+  currentTab:'home',
+  currentSubject:null,
+  currentUnitIndex:0,
+  currentLessonIndex:0,
+  currentCardIndex:0,
+  // exercise
+  exercises:[],
+  currentExIndex:0,
+  userAnswers:[],
+  answered:false,
+  selectedIdx:-1,
+  // shop
+  shopItems:[
+    { id:'pokemon-pack-1',name:'宝可梦 朱/紫 补充包',icon:'🎴',desc:'随机5张卡牌，可能有闪卡！',cost:100,category:'pokemon',priceTag:'≤50元',color:'#FFB347',bgColor:'#FFF8E7'},
+    { id:'pokemon-pack-2',name:'宝可梦 151 补充包',icon:'✨',desc:'初代151只宝可梦，情怀满满！',cost:100,category:'pokemon',priceTag:'≤50元',color:'#FF6B6B',bgColor:'#FFF0F0'},
+    { id:'pokemon-pack-3',name:'宝可梦 剑/盾 补充包',icon:'⚔️',desc:'剑盾系列，伽勒尔地区宝可梦',cost:100,category:'pokemon',priceTag:'≤50元',color:'#4ECDC4',bgColor:'#F0FFFE'},
+    { id:'pokemon-pack-4',name:'宝可梦 随机补充包',icon:'🎁',desc:'随机系列，惊喜加倍！',cost:100,category:'pokemon',priceTag:'≤50元',color:'#A78BFA',bgColor:'#F8F5FF'},
+    { id:'game-switch-1',name:'宝可梦 朱/紫',icon:'🟣',desc:'Nintendo Switch 游戏卡带',cost:300,category:'game',priceTag:'≤200元',color:'#9B59B6',bgColor:'#F5F0FF'},
+    { id:'game-switch-2',name:'宝可梦传说 阿尔宙斯',icon:'🏔️',desc:'Nintendo Switch 游戏卡带',cost:300,category:'game',priceTag:'≤200元',color:'#2ECC71',bgColor:'#F0FFF4'},
+    { id:'game-switch-3',name:'宝可梦 剑/盾',icon:'🛡️',desc:'Nintendo Switch 游戏卡带',cost:300,category:'game',priceTag:'≤200元',color:'#3498DB',bgColor:'#F0F8FF'},
+    { id:'game-switch-4',name:'宝可梦 Let\'s Go 皮卡丘',icon:'⚡',desc:'Nintendo Switch 游戏卡带',cost:300,category:'game',priceTag:'≤200元',color:'#F39C12',bgColor:'#FFF8E7'}
+  ]
+};
+
+/* ================================================================
+   HELPERS
+   ================================================================ */
+let toastTimer;
+function showToast(msg,dur=1800){
+  const t=document.getElementById('toast'); t.textContent=msg; t.classList.add('show');
+  clearTimeout(toastTimer); toastTimer=setTimeout(()=>t.classList.remove('show'),dur);
+}
+function vibrate(pat){ if(navigator.vibrate) navigator.vibrate(pat); }
+
+function modalshow(html){
+  document.getElementById('modalBox').innerHTML=html;
+  document.getElementById('modalMask').style.display='flex';
+}
+function modalhide(){ document.getElementById('modalMask').style.display='none'; }
+document.getElementById('modalMask').addEventListener('click',function(e){ if(e.target===this) modalhide(); });
+
+function switchTab(tab){
+  state.currentTab=tab;
+  document.querySelectorAll('.page').forEach(p=>p.classList.remove('active'));
+  document.querySelectorAll('.tabbar .tab').forEach(t=>t.classList.remove('active'));
+  if(tab==='home'){ document.getElementById('page-home').classList.add('active'); document.querySelector('.tabbar .tab:first-child').classList.add('active'); }
+  else { document.getElementById('page-reward').classList.add('active'); document.querySelector('.tabbar .tab:last-child').classList.add('active'); renderReward(); }
+  renderHome();
+}
+
+function showPage(id){
+  document.querySelectorAll('.page').forEach(p=>p.classList.remove('active'));
+  document.getElementById(id).classList.add('active');
+  document.getElementById('tabbar').style.display=(id==='page-home'||id==='page-reward')?'flex':'none';
+}
+
+function goHome(){ showPage('page-home'); renderHome(); state.currentSubject=null; }
+function goSubject(){ showPage('page-subject'); renderSubject(); }
+function goLesson(){ showPage('page-lesson'); renderLesson(); }
+
+/* ================================================================
+   HOME PAGE
+   ================================================================ */
+function renderHome(){
+  const stars=getTotalStars();
+  document.getElementById('totalStars').textContent=stars;
+  const subjects=['chinese','math','english'];
+  document.getElementById('subjectsList').innerHTML=subjects.map((k,i)=>{
+    const c=COURSES[k]; const p=getProgress(); const sp=p[k]||{};
+    const comp=getSubjCompletion(c.units,sp);
+    return `<div class="subject-card slide-up" style="animation-delay:${i*0.1}s;border-color:${c.color}" onclick="openSubject('${k}')">
+      <div class="subject-mascot">${['🐼','🐵','🦊'][i]}</div>
+      <div class="subject-info"><span class="subject-name" style="color:${c.color}">${c.icon} ${c.name}</span><span class="subject-desc">${c.desc}</span></div>
+      <div class="progress-bar"><div class="progress-fill" style="width:${comp}%;background:${c.color}"></div></div>
+      <span class="progress-text" style="color:${c.color}">${comp===100?'已完成 🎉':'完成 '+comp+'%'}</span>
+      <div class="subject-btn" style="background:${c.color}">开始学习 ▶</div>
+    </div>`;
+  }).join('');
+}
+
+/* ================================================================
+   SUBJECT PAGE
+   ================================================================ */
+function openSubject(type){
+  state.currentSubject=type; state.currentUnitIndex=0;
+  showPage('page-subject'); renderSubject();
+}
+
+function renderSubject(){
+  const c=COURSES[state.currentSubject]; const p=getProgress(); const sp=p[state.currentSubject]||{};
+  document.getElementById('subjTitle').textContent=c.name+'学习';
+  const units=c.units.map((u,i)=>{
+    const up=sp[u.id]||{}; const unlocked=isUnitUnlocked(c.units,i,sp);
+    const completed=!!up.completed;
+    return `<div class="unit-item ${unlocked?'':'locked'} ${completed?'completed':''}" onclick="openLesson(${i})">
+      <div class="unit-number" style="background:${unlocked?c.color:'#CCC'}">${completed?'✅':unlocked?i+1:'🔒'}</div>
+      <div class="unit-info"><div class="unit-title">${u.icon} ${u.title}</div><div class="unit-subtitle">${u.subtitle}</div>
+      ${completed?`<div class="unit-stars">${'⭐'.repeat(up.bestStars||0)}${'☆'.repeat(3-(up.bestStars||0))} ${up.bestScore||''}分</div>`:''}</div>
+      <div class="unit-arrow" style="color:${c.color}">▶</div></div>`;
+  }).join('');
+  document.getElementById('unitList').innerHTML=units;
+}
+
+/* ================================================================
+   LESSON PAGE
+   ================================================================ */
+function openLesson(uIndex){
+  const c=COURSES[state.currentSubject]; const units=c.units; const p=getProgress(); const sp=p[state.currentSubject]||{};
+  if(!isUnitUnlocked(units,uIndex,sp)){ showToast('请先完成前面的关卡 🔒'); return; }
+  state.currentUnitIndex=uIndex; state.currentLessonIndex=0; state.currentCardIndex=0;
+  showPage('page-lesson'); renderLesson();
+}
+
+function renderLesson(){
+  const c=COURSES[state.currentSubject]; const unit=c.units[state.currentUnitIndex];
+  const lessons=unit.lessons; const li=state.currentLessonIndex;
+  const lesson=lessons[li];
+  document.getElementById('lessonTitle').textContent=unit.title;
+  document.getElementById('lessonTabs').innerHTML=lessons.map((l,i)=>`<button class="lesson-tab ${i===li?'active':''}" onclick="switchLesson(${i})">${l.title}</button>`).join('');
+  const cards=lesson.cards; const ci=state.currentCardIndex; const card=cards[ci];
+  document.getElementById('lessonCard').innerHTML=`<div class="knowledge-card">
+    <div class="card-title-row"><span class="card-emoji">${card.emoji}</span><span class="card-title">${card.title}</span></div>
+    <div class="card-content">${card.content.replace(/\n/g,'<br>')}</div></div>
+    ${cards.length>1?`<div class="card-nav">
+      <button class="btn btn-sm btn-outline" onclick="prevCard()" ${ci===0?'disabled':''}>◀ 上一页</button>
+      <span class="card-indicator">${ci+1}/${cards.length}</span>
+      <button class="btn btn-sm btn-outline" onclick="nextCard()" ${ci===cards.length-1?'disabled':''}>下一页 ▶</button></div>`:''}`;
+  document.getElementById('startExerciseBtn').textContent='📝 开始练习';
+  document.getElementById('startExerciseBtn').onclick=startExercise;
+}
+
+function switchLesson(i){
+  state.currentLessonIndex=i; state.currentCardIndex=0; renderLesson();
+}
+function prevCard(){ if(state.currentCardIndex>0){ state.currentCardIndex--; renderLesson(); } }
+function nextCard(){ const c=COURSES[state.currentSubject]; const unit=c.units[state.currentUnitIndex];
+  if(state.currentCardIndex<unit.lessons[state.currentLessonIndex].cards.length-1){ state.currentCardIndex++; renderLesson(); } }
+
+/* ================================================================
+   EXERCISE PAGE
+   ================================================================ */
+function startExercise(){
+  const c=COURSES[state.currentSubject]; const unit=c.units[state.currentUnitIndex];
+  const lesson=unit.lessons[state.currentLessonIndex];
+  state.exercises=lesson.exercises||[]; state.currentExIndex=0; state.userAnswers=new Array(state.exercises.length).fill(-1);
+  state.answered=false; state.selectedIdx=-1;
+  if(state.exercises.length===0){ showToast('本课暂无练习'); return; }
+  document.getElementById('exTitle').textContent=lesson.title+' · 练习';
+  showPage('page-exercise'); renderExercise();
+}
+
+function renderExercise(){
+  const exs=state.exercises; const i=state.currentExIndex; const ex=exs[i];
+  const total=exs.length; const pct=Math.round((i/total)*100);
+  document.getElementById('exBar').style.width=pct+'%';
+  document.getElementById('exLabel').textContent=(i+1)+'/'+total;
+
+  if(!ex) return;
+
+  document.getElementById('exQuestion').innerHTML=`
+    <div class="question-number">Q${i+1}</div>
+    <div class="question-text">${ex.q||ex.question||''}</div>
+    ${(ex.opts||ex.options||[]).map((o,oi)=>{
+      let status=''; const ans=ex.ans!==undefined?ex.ans:ex.answer;
+      if(state.answered){
+        if(oi===ans) status='correct';
+        else if(oi===state.selectedIdx&&oi!==ans) status='wrong';
+      } else if(oi===state.selectedIdx) status='selected';
+      return `<div class="option-card ${status}" onclick="selectAnswer(${oi})">
+        <div class="option-label">${'ABCD'[oi]}</div>
+        <div class="option-text">${o}</div>
+        ${status==='correct'?'<span class="option-icon">✅</span>':''}
+        ${status==='wrong'?'<span class="option-icon">❌</span>':''}
+      </div>`;
+    }).join('')}`;
+
+  // Status text
+  const st=document.getElementById('exStatus');
+  if(state.answered){
+    const ans=ex.ans!==undefined?ex.ans:ex.answer;
+    const correct=state.selectedIdx===ans;
+    st.innerHTML=correct?'<span class="status-correct">✅ 回答正确！</span>':'<span class="status-wrong">❌ 再想想哦</span>';
+  } else { st.innerHTML=''; }
+
+  // Nav buttons
+  document.getElementById('exPrev').disabled=(i===0);
+  const nextBtn=document.getElementById('exNext');
+  nextBtn.disabled=!state.answered;
+  nextBtn.textContent=i>=total-1?'完成 ✅':'下一题 ▶';
+
+  // Dots
+  document.getElementById('exDots').innerHTML=exs.map((_,di)=>{
+    let cls='ex-dot';
+    if(di===i) cls+=' current';
+    if(state.userAnswers[di]>=0){
+      const ans=exs[di].ans!==undefined?exs[di].ans:exs[di].answer;
+      cls+=state.userAnswers[di]===ans?' correct':' wrong';
+    }
+    return `<div class="${cls}"></div>`;
+  }).join('');
+}
+
+function selectAnswer(idx){
+  if(state.answered) return;
+  state.selectedIdx=idx;
+
+  // Update visual
+  const cards=document.querySelectorAll('.option-card');
+  cards.forEach((c,i)=>{ c.className='option-card'; if(i===idx) c.classList.add('selected'); });
+
+  // Delay judgement
+  setTimeout(()=>{
+    const ex=state.exercises[state.currentExIndex]; const ans=ex.ans!==undefined?ex.ans:ex.answer;
+    state.userAnswers[state.currentExIndex]=idx;
+    state.answered=true;
+    vibrate(idx===ans?100:[200,100,200]);
+    renderExercise();
+  },400);
+}
+
+function exPrev(){
+  if(state.currentExIndex<=0) return;
+  state.currentExIndex--; const prevAns=state.userAnswers[state.currentExIndex];
+  state.answered=prevAns>=0; state.selectedIdx=prevAns>=0?prevAns:-1;
+  renderExercise();
+}
+
+function exNext(){
+  if(!state.answered) return;
+  if(state.currentExIndex>=state.exercises.length-1){ finishExercise(); return; }
+  state.currentExIndex++; const ans=state.userAnswers[state.currentExIndex];
+  state.answered=ans>=0; state.selectedIdx=ans>=0?ans:-1;
+  renderExercise();
+}
+
+function finishExercise(){
+  vibrate(300);
+  const exs=state.exercises; const answers=state.userAnswers;
+  let correct=0; answers.forEach((a,i)=>{ if(a===exs[i].ans||a===exs[i].answer) correct++; });
+  const total=exs.length; const accuracy=Math.round((correct/total)*100);
+  const stars=calculateStars(correct,total); // 全对1颗，否则0
+
+  // Save progress
+  const c=COURSES[state.currentSubject]; const unit=c.units[state.currentUnitIndex];
+  const p=getProgress();
+  if(!p[state.currentSubject]) p[state.currentSubject]={};
+  const existing=p[state.currentSubject][unit.id]||{};
+  p[state.currentSubject][unit.id]={
+    ...existing, completed:accuracy>=50, stars,bestStars:Math.max(existing.bestStars||0,stars),
+    bestScore:Math.max(existing.bestScore||0,accuracy),updatedAt:Date.now()
+  };
+  if(accuracy>=50&&!existing.completedAt) p[state.currentSubject][unit.id].completedAt=Date.now();
+  saveProgress(p);
+  if(stars>0) addStars(stars);
+
+  // Badges
+  const totalStars=getTotalStars(); const badges=getBadges(); const newBadges=[];
+  const milestones=[{id:'stars-10',name:'⭐ 初露锋芒',desc:'累计获得10颗星',cond:totalStars>=10},{id:'stars-30',name:'🌟 学习小达人',desc:'累计获得30颗星',cond:totalStars>=30},{id:'stars-60',name:'💫 智慧之星',desc:'累计获得60颗星',cond:totalStars>=60},{id:'stars-100',name:'👑 学霸大王',desc:'累计获得100颗星',cond:totalStars>=100}];
+  milestones.forEach(m=>{ if(m.cond&&!badges.find(b=>b.id===m.id)){ addBadge(m); newBadges.push(m); } });
+  if(stars===1&&!badges.find(b=>b.id==='first-perfect')){ const fb={id:'first-perfect',name:'🎯 满分冠军',desc:'第一次全部答对'}; addBadge(fb); newBadges.push(fb); }
+
+  // Render result
+  showPage('page-result');
+  let msg='',emoji='';
+  if(stars===1){ msg='太棒了！全对通过！'; emoji='🎉'; }
+  else { msg='别灰心，再来一次吧！'; emoji='💪'; }
+
+  const hasNextLesson=state.currentLessonIndex<unit.lessons.length-1;
+  const hasNextUnit=state.currentUnitIndex<c.units.length-1;
+  const hasNext=hasNextLesson||hasNextUnit;
+
+  document.getElementById('resultContent').innerHTML=`
+    <div class="result-card card">
+      <span class="result-emoji pop-in">${emoji}</span>
+      <span class="result-message">${msg}</span>
+      <div class="result-score"><span class="num">${correct}</span><span class="divider">/</span><span class="total">${total}</span>正确</div>
+      <div class="result-accuracy">正确率：${accuracy}%</div>
+      <div class="result-stars">${stars===1?'⭐':'☆'}</div>
+    </div>
+    <div class="result-grade card">
+      <div style="font-weight:700;margin-bottom:12px;padding-bottom:8px;border-bottom:2px dashed #EEE">成绩单</div>
+      <div class="row"><span>科目</span><span class="val" style="color:${c.color}">${c.name}</span></div>
+      <div class="row"><span>单元</span><span class="val">${unit.title}</span></div>
+      <div class="row"><span>正确题数</span><span class="val">${correct}/${total}</span></div>
+      <div class="row"><span>获得星星</span><span class="val">⭐ × ${stars}</span></div>
+      ${newBadges.length?`<div style="margin-top:12px;background:#FFF9E6;border-radius:var(--radius);padding:16px;text-align:center">
+        🎊 获得新徽章！${newBadges.map(b=>`<span style="display:inline-block;background:#fff;border-radius:20px;padding:6px 14px;margin:6px;font-weight:600;font-size:var(--font-sm)">${b.name}</span>`).join('')}</div>`:''}
+    </div>
+    <div style="display:flex;flex-direction:column;gap:12px;margin-top:16px;padding:0 4px">
+      <button class="btn btn-outline" onclick="retryExercise()">🔄 再来一次</button>
+      <button class="btn btn-outline" onclick="goLesson()">📖 返回学习</button>
+      ${hasNext?`<button class="btn btn-primary" onclick="goNext()">下一关 ▶️</button>`:`<button class="btn btn-accent" onclick="goHome()">🏠 返回首页</button>`}
+    </div>`;
+}
+
+function retryExercise(){ showPage('page-exercise'); state.currentExIndex=0; state.userAnswers=new Array(state.exercises.length).fill(-1); state.answered=false; state.selectedIdx=-1; renderExercise(); }
+
+function goNext(){
+  const c=COURSES[state.currentSubject]; const unit=c.units[state.currentUnitIndex];
+  if(state.currentLessonIndex<unit.lessons.length-1){ state.currentLessonIndex++; state.currentCardIndex=0; goLesson(); return; }
+  if(state.currentUnitIndex<c.units.length-1){ state.currentUnitIndex++; state.currentLessonIndex=0; state.currentCardIndex=0; goSubject(); return; }
+  goHome();
+}
+
+/* ================================================================
+   REWARD PAGE
+   ================================================================ */
+function renderReward(){
+  const stars=getTotalStars(); const earnedBadges=getBadges(); const progress=getProgress();
+  const allBadges=[
+    { id:'stars-10',name:'初露锋芒',icon:'⭐',desc:'累计获得10颗星'},{ id:'stars-30',name:'学习小达人',icon:'🌟',desc:'累计获得30颗星'},
+    { id:'stars-60',name:'智慧之星',icon:'💫',desc:'累计获得60颗星'},{ id:'stars-100',name:'学霸大王',icon:'👑',desc:'累计获得100颗星'},
+    { id:'first-perfect',name:'满分冠军',icon:'🎯',desc:'第一次获得3颗星'},{ id:'chinese-all',name:'语文小学者',icon:'📖',desc:'完成全部语文单元'},
+    { id:'math-all',name:'数学小天才',icon:'🔢',desc:'完成全部数学单元'},{ id:'english-all',name:'英语小达人',icon:'🔤',desc:'完成全部英语单元'}
+  ];
+
+  // Auto-check subject badges
+  ['chinese','math','english'].forEach(k=>{
+    const p=progress[k]||{}; const course=COURSES[k];
+    const allDone=course.units.every(u=>p[u.id]&&p[u.id].completed);
+    if(allDone){ const bid=k+'-all'; if(!earnedBadges.find(b=>b.id===bid)){ const badge=allBadges.find(b=>b.id===bid); if(badge) addBadge(badge); } }
+  });
+  const freshBadges=getBadges();
+
+  const badgesHtml=allBadges.map(b=>{ const earned=!!freshBadges.find(x=>x.id===b.id);
+    return `<div class="badge-card ${earned?'earned':'locked'}"><div class="badge-icon">${earned?b.icon:'🔒'}</div><div class="badge-name">${b.name}</div><div class="badge-desc">${b.desc}</div><div class="badge-status">${earned?'已获得 ✅':'未解锁'}</div></div>`; }).join('');
+
+  // Subject stats
+  const subjects=['chinese','math','english'].map(k=>{
+    const p=progress[k]||{}; const course=COURSES[k]; const total=course.units.length;
+    const done=Object.values(p).filter(u=>u.completed).length; const st=Object.values(p).reduce((s,u)=>s+(u.bestStars||0),0);
+    return {key:k,name:course.name,icon:course.icon,color:course.color,total,done,stars:st,pct:Math.round((done/total)*100)};
+  });
+  const statsHtml=subjects.map(s=>`<div class="stat-card"><div class="flex-between"><div class="flex-center"><span style="font-size:20px;margin-right:8px">${s.icon}</span><span style="font-weight:700">${s.name}</span></div><span style="font-weight:600;color:#F39C12">⭐ ${s.stars}</span></div><div class="stat-bar"><div class="stat-fill" style="width:${s.pct}%;background:${s.color}"></div></div><div style="font-size:var(--font-xs);color:var(--text-light)">完成 ${s.done}/${s.total} 个单元 (${s.pct}%)</div></div>`).join('');
+
+  // Shop
+  const shopItems=state.shopItems;
+  const pokemonItems=shopItems.filter(s=>s.category==='pokemon').map(s=>`<div class="shop-card2" style="background:${s.bgColor};border-color:${s.color}" onclick="openExchange('${s.id}')"><span class="shop-icon">${s.icon}</span><span class="shop-name">${s.name}</span><span class="shop-desc">${s.desc}</span><div class="shop-bottom"><span class="shop-price" style="background:${s.color}">⭐ ${s.cost}</span><span class="shop-tag">${s.priceTag}</span></div></div>`).join('');
+  const gameItems=shopItems.filter(s=>s.category==='game').map(s=>`<div class="shop-card2" style="background:${s.bgColor};border-color:${s.color}" onclick="openExchange('${s.id}')"><span class="shop-icon">${s.icon}</span><span class="shop-name">${s.name}</span><span class="shop-desc">${s.desc}</span><div class="shop-bottom"><span class="shop-price" style="background:${s.color}">⭐ ${s.cost}</span><span class="shop-tag">${s.priceTag}</span></div></div>`).join('');
+
+  const history=getExchangeHistory().slice(-10).reverse();
+  const historyHtml=history.length?`<div class="section-title">📋 兑换记录</div>${history.map(h=>`<div class="history-item"><span class="history-icon">${h.icon}</span><span class="history-name">${h.name}</span><span class="history-cost">-${h.cost} ⭐</span></div>`).join('')}`:'';
+
+  let footerMsg;
+  if(stars>=500) footerMsg='👑 你已经非常厉害了！继续加油！';
+  else if(stars>=300) footerMsg='🎮 可以兑换Switch游戏啦！';
+  else if(stars>=100) footerMsg='🎴 可以兑换宝可梦卡包啦！';
+  else if(stars>=50) footerMsg='📚 不错的开始！每天进步一点点！';
+  else footerMsg='🚀 快来学习获取你的第一颗星星吧！';
+
+  document.getElementById('rewardContent').innerHTML=`
+    <div class="reward-hero2"><span class="star-icon">⭐</span><span class="star-count">${stars}</span><span class="star-label">颗星星</span></div>
+    <div class="section-title">🎮 星星兑换商城</div>
+    <div class="section-subtitle">努力学习攒星星，兑换宝可梦奖励！</div>
+    <div class="shop-cat-title"><span>🎴 宝可梦卡包</span><span class="shop-cat-cost">100 ⭐ / 包（≤50元）</span></div>
+    <div class="shop-scroll">${pokemonItems}</div>
+    <div style="margin-top:20px"></div>
+    <div class="shop-cat-title"><span>🎮 Switch 游戏</span><span class="shop-cat-cost">300 ⭐ / 款（≤200元）</span></div>
+    <div class="shop-scroll">${gameItems}</div>
+    ${historyHtml}
+    <div class="section-title">🏅 徽章收藏 (${freshBadges.length}/${allBadges.length})</div>
+    <div class="badge-grid">${badgesHtml}</div>
+    <div class="section-title">📊 学习统计</div>${statsHtml}
+    <div style="text-align:center;padding:24px;font-weight:600">${footerMsg}</div>`;
+}
+
+function openExchange(id){
+  const item=state.shopItems.find(s=>s.id===id);
+  if(!item) return;
+  const stars=getTotalStars();
+  if(stars<item.cost){ showToast(`星星不足！还需要 ${item.cost-stars} 颗⭐`,2500); return; }
+  modalshow(`
+    <div class="ex-modal-icon">${item.icon}</div>
+    <div style="font-size:var(--font-lg);font-weight:700;margin-bottom:4px">确认兑换？</div>
+    <div style="font-size:var(--font-md);color:var(--primary);font-weight:600;margin-bottom:20px">${item.name}</div>
+    <div style="display:flex;flex-direction:column;gap:8px;background:#F8F8F8;border-radius:var(--radius);padding:16px;margin-bottom:16px;font-size:var(--font-md)">
+      <span>需要消耗：<span style="font-weight:700;color:#E74C3C">⭐ ${item.cost}</span></span>
+      <span>当前拥有：<span style="font-weight:700;color:#F39C12">⭐ ${stars}</span></span>
+      <span>兑换后剩余：<span style="font-weight:700;color:#2ECC71">⭐ ${stars-item.cost}</span></span>
+    </div>
+    <div style="font-size:var(--font-xs);color:var(--text-light);margin-bottom:20px">💡 兑换后请找爸爸妈妈要实物奖励哦~</div>
+    <div class="modal-actions">
+      <button class="btn btn-outline" onclick="modalhide()">再想想</button>
+      <button class="btn btn-primary" onclick="confirmExchange('${item.id}')">确认兑换！</button>
+    </div>`);
+}
+
+function confirmExchange(id){
+  const item=state.shopItems.find(s=>s.id===id);
+  if(!item) return;
+  const remaining=spendStars(item.cost);
+  if(remaining<0){ showToast('星星不足！'); return; }
+  addExchangeRecord({id:item.id,name:item.name,icon:item.icon,cost:item.cost,category:item.category,priceTag:item.priceTag});
+  vibrate(400); modalhide();
+  modalshow(`<div style="font-size:60px;margin-bottom:12px">🎉</div>
+    <div style="font-size:var(--font-lg);font-weight:700;margin-bottom:6px">兑换成功！</div>
+    <div style="font-size:var(--font-md);margin-bottom:12px">恭喜获得「${item.name}」！</div>
+    <div style="color:var(--text-light);margin-bottom:8px">消费 ${item.cost} ⭐ · 剩余 ${remaining} ⭐</div>
+    <div style="font-size:var(--font-xs);color:var(--text-light);margin-bottom:16px">请找爸爸妈妈兑换实物哦~</div>
+    <button class="btn btn-primary" onclick="modalhide();renderReward();renderHome()">太棒了！</button>`);
+}
+
+/* ================================================================
+   INIT
+   ================================================================ */
+// Service worker: only register when served over HTTP (not file://)
+if('serviceWorker' in navigator && (location.protocol==='https:' || location.protocol==='http:')){
+  const swCode='const C="yxxj-v2";self.addEventListener("install",e=>{e.waitUntil(caches.open(C).then(c=>c.addAll(["./"])));self.skipWaiting()});self.addEventListener("activate",e=>{e.waitUntil(caches.keys().then(k=>Promise.all(k.filter(x=>x!==C).map(x=>caches.delete(x)))));self.clients.claim()});self.addEventListener("fetch",e=>{e.respondWith(caches.match(e.request).then(c=>c||fetch(e.request)))})';
+  const blob=new Blob([swCode],{type:'application/javascript'});
+  navigator.serviceWorker.register(URL.createObjectURL(blob)).catch(()=>{});
+}
+
+// URL参数：?stars=1000 可以快速设置星星数（方便测试兑换）
+(function(){
+  const m=location.search.match(/[?&]stars=(\d+)/);
+  if(m){ const n=parseInt(m[1]); LS.set('stars',n); showToast(`已设置 ${n} ⭐`); }
+})();
+
+renderHome();
+
+// Prevent double-tap zoom on buttons
+document.addEventListener('dblclick',function(e){ if(e.target.tagName==='BUTTON') e.preventDefault(); },{passive:false});
+</script>
+</body>
+</html>
