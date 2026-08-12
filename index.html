@@ -337,49 +337,13 @@ const COURSES = {
        exercises:[{q:'"我是小学生"有几个字？',opts:['4个','5个','6个','7个'],ans:1},{q:'"我爱爸爸妈妈"这句话里有谁？',opts:['只有爸爸','只有妈妈','爸爸和妈妈','爷爷和奶奶'],ans:2},{q:'小鸟在哪里唱歌？',opts:['地上','水里','树上','天空'],ans:2},{q:'春天来了，什么开了？',opts:['门','花','窗','灯'],ans:1}]}
     ]}
   ]},
-  math: { id:'math',name:'数学',icon:'🔢',color:'#4ECDC4',desc:'数数、计算、认识图形', units:[
-    { id:'math-u1',title:'数数 1-10',subtitle:'认识数字，数物对应',icon:'🔟',lessons:[
-      { id:'math-u1-l1',title:'认识 1-5',type:'number',cards:[{ title:'数字 1-5',content:'1 像铅笔细又长 ✏️\n2 像鸭子水中游 🦆\n3 像耳朵听声音 👂\n4 像小旗迎风飘 🚩\n5 像钩子挂东西 🪝\n\n数一数：🍎=1  🍎🍎=2  🍎🍎🍎=3',emoji:'✏️',pinyin:''}],exercises:[{q:'2 像什么？',opts:['铅笔','鸭子','耳朵','小旗'],ans:1},{q:'🍎🍎🍎 是几个？',opts:['1','2','3','4'],ans:2},{q:'5 像什么？',opts:['耳朵','小旗','钩子','鸭子'],ans:2},{q:'3和4哪个大？',opts:['3大','4大','一样大'],ans:1}]},
-      { id:'math-u1-l2',title:'认识 6-10',type:'number',cards:[{ title:'数字 6-10',content:'6 像口哨吹得响 🎵\n7 像拐杖墙上靠 🦯\n8 像葫芦藤上挂 🏺\n9 像气球飞上天 🎈\n10 像油条加鸡蛋 🥖🥚\n\n从1数到10：1 2 3 4 5 6 7 8 9 10',emoji:'🎵',pinyin:''}],exercises:[{q:'8 像什么？',opts:['口哨','拐杖','葫芦','气球'],ans:2},{q:'6后面是几？',opts:['5','7','8','4'],ans:1},{q:'10 是几位数？',opts:['一位数','两位数','三位数'],ans:1},{q:'9和10哪个大？',opts:['9大','10大','一样大'],ans:1}]}
-    ]},
-    { id:'math-u2',title:'比一比',subtitle:'大小、多少、高矮、长短',icon:'⚖️',lessons:[
-      { id:'math-u2-l1',title:'大小和多少',type:'compare',cards:[{ title:'比大小 比多少',content:'比大小：\n🐘 大象大，🐭 老鼠小\n🏀 篮球大，🏓 乒乓球小\n\n比多少：\n🍎🍎🍎🍎（4个）> 🍎🍎（2个）\n4个苹果比2个苹果多\n\n口诀：排整齐，一对一，多出来的是"多"的',emoji:'🐘',pinyin:''}],exercises:[{q:'大象和老鼠，谁大？',opts:['大象','老鼠','一样大'],ans:0},{q:'5个苹果和3个苹果，哪个多？',opts:['5个多','3个多','一样多'],ans:0},{q:'比较多少要用什么方法？',opts:['随便比','一对一排整齐','猜一猜'],ans:1}]},
-      { id:'math-u2-l2',title:'高矮和长短',type:'compare',cards:[{ title:'比高矮 比长短',content:'比高矮：\n🦒 长颈鹿高，🐧 企鹅矮\n爸爸高，宝宝矮\n\n比长短：\n✏️✏️✏️ 长铅笔\n✏️ 短铅笔\n\n口诀：放在一起比一比，高矮长短看仔细',emoji:'🦒',pinyin:''}],exercises:[{q:'长颈鹿和企鹅，谁高？',opts:['长颈鹿','企鹅','一样高'],ans:0},{q:'3支铅笔和1支铅笔，哪个长？',opts:['3支的更长','1支的更长','一样长'],ans:0},{q:'比高矮要把物体怎么样？',opts:['随便放','放在一起对齐','远远地看'],ans:1}]}
-    ]},
-    { id:'math-u3',title:'数数 11-20',subtitle:'十位制初步、凑十法',icon:'🧮',lessons:[
-      { id:'math-u3-l1',title:'认识 11-15',type:'number',cards:[{ title:'11-15',content:'10+1=11  十一\n10+2=12  十二\n10+3=13  十三\n10+4=14  十四\n10+5=15  十五\n\n1个十和几个一合起来就是十几\n\n📦(10个) + 🍎 = 11',emoji:'📦',pinyin:''}],exercises:[{q:'10+3等于多少？',opts:['11','12','13','14'],ans:2},{q:'15里面有1个十和几个一？',opts:['3个','4个','5个','6个'],ans:2},{q:'1个十和2个一合起来是？',opts:['11','12','13','14'],ans:1},{q:'十位制中，十位上的1表示什么？',opts:['1个','1个十','1个百'],ans:1}]},
-      { id:'math-u3-l2',title:'认识 16-20',type:'number',cards:[{ title:'16-20',content:'10+6=16  十六\n10+7=17  十七\n10+8=18  十八\n10+9=19  十九\n10+10=20  二十\n\n2个十就是20！\n\n数数歌：11 12 13 14 15  16 17 18 19 20',emoji:'🎉',pinyin:''}],exercises:[{q:'10+8等于多少？',opts:['16','17','18','19'],ans:2},{q:'20里面有2个什么？',opts:['一','十','百'],ans:1},{q:'19是由什么组成的？',opts:['1个十和9个一','9个十和1个一','19个一'],ans:0}]}
-    ]},
-    { id:'math-u4',title:'10以内加减',subtitle:'分与合、加减意义',icon:'➕',lessons:[
-      { id:'math-u4-l1',title:'分与合',type:'calculate',cards:[{ title:'数的分与合',content:'5可以分成：\n5=1+4  5=2+3\n5=3+2  5=4+1  5=5+0\n\n手指游戏：\n一只手5根手指，弯下2根，还剩3根\n5可以分成2和3\n\n试一试：6可以分成几和几？',emoji:'🖐️',pinyin:''}],exercises:[{q:'5可以分成2和几？',opts:['2','3','4','1'],ans:1},{q:'一只手有几根手指？',opts:['4','5','6','10'],ans:1},{q:'3和3合起来是几？',opts:['5','6','7','4'],ans:1},{q:'8可以分成4和几？',opts:['2','3','4','5'],ans:2}]},
-      { id:'math-u4-l2',title:'10以内加减法',type:'calculate',cards:[{ title:'加法和减法',content:'加法：把东西合起来\n🍎🍎 + 🍎🍎🍎 = 5个苹果\n2 + 3 = 5\n\n减法：从里面拿走\n🍎🍎🍎🍎🍎 - 🍎🍎 = 3个苹果\n5 - 2 = 3\n\n口诀：总数里面去掉一部分，剩下的就是减法答案',emoji:'🍎',pinyin:''}],exercises:[{q:'2+3等于多少？',opts:['4','5','6','3'],ans:1},{q:'7-3等于多少？',opts:['3','4','5','10'],ans:1},{q:'小明有4颗糖，吃了1颗，还剩几颗？',opts:['2','3','4','5'],ans:1},{q:'8+2等于多少？',opts:['9','10','8','6'],ans:1}]}
-    ]},
-    { id:'math-u5',title:'20以内加减',subtitle:'不进位加法、不退位减法',icon:'🎯',lessons:[
-      { id:'math-u5-l1',title:'20以内加法',type:'calculate',cards:[{ title:'不进位加法',content:'个位加个位，十位不变\n\n例：12+3=?\n12=10+2\n2+3=5\n10+5=15\n所以12+3=15 ✅\n\n练一练：11+5=? 13+4=? 15+2=?',emoji:'🧮',pinyin:''}],exercises:[{q:'12+3等于多少？',opts:['14','15','16','13'],ans:1},{q:'11+5等于多少？',opts:['15','16','17','14'],ans:1},{q:'14+4等于多少？',opts:['16','17','18','19'],ans:2},{q:'10+8等于多少？',opts:['16','17','18','19'],ans:2}]},
-      { id:'math-u5-l2',title:'20以内减法',type:'calculate',cards:[{ title:'不退位减法',content:'个位减个位，十位不变\n\n例：17-4=?\n17=10+7\n7-4=3\n10+3=13\n所以17-4=13 ✅\n\n练一练：15-3=? 18-5=? 16-2=?',emoji:'➖',pinyin:''}],exercises:[{q:'17-4等于多少？',opts:['12','13','14','11'],ans:1},{q:'15-3等于多少？',opts:['11','12','13','10'],ans:1},{q:'16-2等于多少？',opts:['13','14','12','15'],ans:1},{q:'19-7等于多少？',opts:['11','12','10','13'],ans:1}]}
-    ]},
-    { id:'math-u6',title:'认识图形',subtitle:'长方体、正方体、圆柱、球',icon:'🔮',lessons:[
-      { id:'math-u6-l1',title:'立体图形',type:'shape',cards:[{ title:'四种立体图形',content:'长方体 📦\n像盒子、书本、冰箱，6个面都是长方形\n\n正方体 🎲\n像骰子、魔方，6个面都是正方形\n\n圆柱 🥫\n像罐头、水杯，上下两个圆\n\n球 ⚽\n像足球、篮球，圆圆的，到处滚',emoji:'📦',pinyin:''}],exercises:[{q:'盒子是什么形状？',opts:['正方体','长方体','圆柱','球'],ans:1},{q:'足球是什么形状？',opts:['正方体','长方体','圆柱','球'],ans:3},{q:'罐头是什么形状？',opts:['正方体','长方体','圆柱','球'],ans:2},{q:'正方体有几个面？',opts:['4个','5个','6个','8个'],ans:2}]}
-    ]},
-    { id:'math-u7',title:'九九乘法表',subtitle:'1~9 乘法口诀背诵与练习',icon:'✖️',lessons:[
-      { id:'math-u7-l1',title:'1~3 的乘法',type:'multiply',cards:[
-        { title:'1的乘法口诀',content:'1×1=1 一一得一\n1×2=2 一二得二\n1×3=3 一三得三\n1×4=4 一四得四\n1×5=5 一五得五\n1×6=6 一六得六\n1×7=7 一七得七\n1×8=8 一八得八\n1×9=9 一九得九\n\n1乘任何数都等于它自己！',emoji:'1️⃣',pinyin:''},
-        { title:'2的乘法口诀',content:'2×1=2 一二得二\n2×2=4 二二得四\n2×3=6 二三得六\n2×4=8 二四得八\n2×5=10 二五一十\n2×6=12 二六十二\n2×7=14 二七十四\n2×8=16 二八十六\n2×9=18 二九十八\n\n2乘任何数，就是把那个数翻一倍！',emoji:'2️⃣',pinyin:''},
-        { title:'3的乘法口诀',content:'3×1=3 一三得三\n3×2=6 二三得六\n3×3=9 三三得九\n3×4=12 三四十二\n3×5=15 三五十五\n3×6=18 三六十八\n3×7=21 三七二十一\n3×8=24 三八二十四\n3×9=27 三九二十七\n\n用连加理解：3×4 = 3+3+3+3',emoji:'3️⃣',pinyin:''}],
-       exercises:[{q:'2×3 等于多少？',opts:['5','6','7','8'],ans:1},{q:'3×4 等于多少？',opts:['10','11','12','14'],ans:2},{q:'1×8 等于多少？',opts:['7','8','9','1'],ans:1},{q:'2×5 等于多少？',opts:['8','9','10','12'],ans:2},{q:'3×3 等于多少？',opts:['6','8','9','12'],ans:2},{q:'2×7 等于多少？',opts:['12','14','16','18'],ans:1}]},
-      { id:'math-u7-l2',title:'4~6 的乘法',type:'multiply',cards:[
-        { title:'4的乘法口诀',content:'4×1=4 一四得四\n4×2=8 二四得八\n4×3=12 三四十二\n4×4=16 四四十六\n4×5=20 四五二十\n4×6=24 四六二十四\n4×7=28 四七二十八\n4×8=32 四八三十二\n4×9=36 四九三十六\n\n规律：4乘的结果个位是4、8、2、6、0循环',emoji:'4️⃣',pinyin:''},
-        { title:'5的乘法口诀',content:'5×1=5 一五得五\n5×2=10 二五一十\n5×3=15 三五十五\n5×4=20 四五二十\n5×5=25 五五二十五\n5×6=30 五六三十\n5×7=35 五七三十五\n5×8=40 五八四十\n5×9=45 五九四十五\n\n最好记！个位不是5就是0！',emoji:'5️⃣',pinyin:''},
-        { title:'6的乘法口诀',content:'6×1=6 一六得六\n6×2=12 二六十二\n6×3=18 三六十八\n6×4=24 四六二十四\n6×5=30 五六三十\n6×6=36 六六三十六\n6×7=42 六七四十二\n6×8=48 六八四十八\n6×9=54 六九五十四',emoji:'6️⃣',pinyin:''}],
-       exercises:[{q:'4×5 等于多少？',opts:['16','18','20','24'],ans:2},{q:'5×7 等于多少？',opts:['30','35','40','45'],ans:1},{q:'6×3 等于多少？',opts:['15','16','18','21'],ans:2},{q:'4×8 等于多少？',opts:['28','30','32','36'],ans:2},{q:'5×6 等于多少？',opts:['25','30','35','40'],ans:1},{q:'6×7 等于多少？',opts:['36','40','42','48'],ans:2}]},
-      { id:'math-u7-l3',title:'7~9 的乘法',type:'multiply',cards:[
-        { title:'7的乘法口诀',content:'7×1=7 一七得七\n7×2=14 二七十四\n7×3=21 三七二十一\n7×4=28 四七二十八\n7×5=35 五七三十五\n7×6=42 六七四十二\n7×7=49 七七四十九\n7×8=56 七八五十六\n7×9=63 七九六十三',emoji:'7️⃣',pinyin:''},
-        { title:'8的乘法口诀',content:'8×1=8 一八得八\n8×2=16 二八十六\n8×3=24 三八二十四\n8×4=32 四八三十二\n8×5=40 五八四十\n8×6=48 六八四十八\n8×7=56 七八五十六\n8×8=64 八八六十四\n8×9=72 八九七十二',emoji:'8️⃣',pinyin:''},
-        { title:'9的乘法口诀',content:'9×1=9 一九得九\n9×2=18 二九十八\n9×3=27 三九二十七\n9×4=36 四九三十六\n9×5=45 五九四十五\n9×6=54 六九五十四\n9×7=63 七九六十三\n9×8=72 八九七十二\n9×9=81 九九八十一\n\n🌵 手指记忆法：弯下第几根手指，左边是十位，右边是个位！',emoji:'9️⃣',pinyin:''}],
-       exercises:[{q:'7×8 等于多少？',opts:['54','56','58','63'],ans:1},{q:'8×7 等于多少？',opts:['54','56','58','63'],ans:1},{q:'9×9 等于多少？',opts:['72','78','81','90'],ans:2},{q:'7×5 等于多少？',opts:['30','32','35','40'],ans:2},{q:'8×6 等于多少？',opts:['42','46','48','52'],ans:2},{q:'9×7 等于多少？',opts:['56','60','63','68'],ans:2}]},
-      { id:'math-u7-l4',title:'乘法大挑战',type:'multiply',cards:[
-        { title:'九九乘法表总复习',content:'完整乘法表（45句口诀）：\n\n一列：一一得一 ~ 一九得九\n二列：一二得二 ~ 二九十八\n三列：一三得三 ~ 三九二十七\n四列：一四得四 ~ 四九三十六\n五列：一五得五 ~ 五九四十五\n六列：一六得六 ~ 六九五十四\n七列：一七得七 ~ 七九六十三\n八列：一八得八 ~ 八九七十二\n九列：一九得九 ~ 九九八十一\n\n背熟乘法表，计算快如飞！🚀',emoji:'🏆',pinyin:''}],
-       exercises:[{q:'6×8 等于多少？',opts:['42','48','52','56'],ans:1},{q:'7×9 等于多少？',opts:['56','60','63','72'],ans:2},{q:'8×8 等于多少？',opts:['56','60','64','72'],ans:2},{q:'9×6 等于多少？',opts:['48','52','54','58'],ans:2},{q:'5×8 等于多少？',opts:['35','40','45','48'],ans:1},{q:'4×9 等于多少？',opts:['28','32','36','40'],ans:2},{q:'7×7 等于多少？',opts:['42','47','49','56'],ans:2},{q:'3×8 等于多少？',opts:['21','24','27','32'],ans:1}]}
+  math: { id:'math',name:'数学',icon:'🔢',color:'#4ECDC4',desc:'100以内加减法 + 乘法', units:[
+    { id:'math-u1',title:'每日练习',subtitle:'100以内加减法 + 乘法 · 50题',icon:'🎲',lessons:[
+      { id:'math-u1-l1',title:'今日随机题库',type:'math-random',cards:[
+        { title:'今日挑战',content:'50道随机题
+包含100以内加减法和九九乘法
+全部答对得5颗星！',emoji:'🎲',pinyin:''}
+      ],exercises:[]}
     ]}
   ]},
 english: { id:'english',name:'英语',icon:'🔤',color:'#A78BFA',desc:'剑桥Starters少儿单词', units:[
@@ -469,7 +433,7 @@ function addBadge(b){ const badges=getBadges(); if(!badges.find(x=>x.id===b.id))
 function getExchangeHistory(){ return LS.get('exchanges',[]); }
 function addExchangeRecord(r){ const h=getExchangeHistory(); h.push({...r,exchangedAt:Date.now()}); LS.set('exchanges',h); return h; }
 
-function calculateStars(correct,total){ return correct===total ? 6 : 0; }
+function calculateStars(correct,total,subject){ if(correct!==total) return 0; return subject==='math'?5:subject==='english'?6:1; }
 function isUnitUnlocked(units,uIndex,progress){
   if(uIndex===0) return true;
   const prev=units[uIndex-1]; const pp=progress[prev.id];
@@ -626,10 +590,44 @@ function nextCard(){ const c=COURSES[state.currentSubject]; const unit=c.units[s
 /* ================================================================
    EXERCISE PAGE
    ================================================================ */
+function generateMathQuestions(){
+  const qs=[], N=50;
+  const shuffled=[]; for(let i=0;i<N;i++){ const r=Math.floor(Math.random()*3); shuffled.push(r); }
+  const adjust=shuffled.filter(x=>x===0).length-shuffled.filter(x=>x===1).length;
+  let addCount=shuffled.filter(x=>x===0).length, subCount=shuffled.filter(x=>x===1).length, mulCount=shuffled.filter(x=>x===2).length;
+  const targetEach=Math.floor(N/3);
+  while(addCount>targetEach+3){ const idx=shuffled.indexOf(0); shuffled[idx]=Math.random()<0.5?1:2; addCount--; }
+  while(subCount>targetEach+3){ const idx=shuffled.indexOf(1); shuffled[idx]=Math.random()<0.5?0:2; subCount--; }
+  while(mulCount>targetEach+3){ const idx=shuffled.indexOf(2); shuffled[idx]=Math.random()<0.5?0:1; mulCount--; }
+  for(let i=0;i<N;i++){
+    const type=shuffled[i];
+    let q,ans;
+    if(type===0){ // addition within 100
+      const a=Math.floor(Math.random()*90)+5; const b=Math.floor(Math.random()*(100-a-1))+1;
+      q=a+'+'+b+'=?'; ans=a+b;
+    } else if(type===1){ // subtraction within 100
+      const a=Math.floor(Math.random()*85)+15; const b=Math.floor(Math.random()*(a-1))+1;
+      q=a+'-'+b+'=?'; ans=a-b;
+    } else { // multiplication 1-9
+      const a=Math.floor(Math.random()*9)+1; const b=Math.floor(Math.random()*9)+1;
+      q=a+'×'+b+'=?'; ans=a*b;
+    }
+    const opts=new Set([ans]); while(opts.size<4){ const d=ans+Math.floor(Math.random()*21)-10; if(d>=0&&d<=100) opts.add(d); }
+    const optArr=[...opts].sort(()=>Math.random()-0.5);
+    qs.push({q,opts:optArr.map(String),ans:optArr.indexOf(ans)});
+  }
+  return qs;
+}
+
 function startExercise(){
   const c=COURSES[state.currentSubject]; const unit=c.units[state.currentUnitIndex];
   const lesson=unit.lessons[state.currentLessonIndex];
-  state.exercises=lesson.exercises||[]; state.currentExIndex=0; state.userAnswers=new Array(state.exercises.length).fill(-1);
+  if(lesson.type==='math-random'){
+    state.exercises=generateMathQuestions();
+  } else {
+    state.exercises=lesson.exercises||[];
+  }
+  state.currentExIndex=0; state.userAnswers=new Array(state.exercises.length).fill(-1);
   state.answered=false; state.selectedIdx=-1;
   if(state.exercises.length===0){ showToast('本课暂无练习'); return; }
   document.getElementById('exTitle').textContent=lesson.title+' · 练习';
@@ -765,7 +763,7 @@ function finishExercise(){
     else { if(a===ex.ans||a===ex.answer) correct++; }
   });
   const total=exs.length; const accuracy=Math.round((correct/total)*100);
-  const stars=calculateStars(correct,total); // 全对1颗，否则0
+  const stars=calculateStars(correct,total,state.currentSubject);
 
   // Save progress
   const c=COURSES[state.currentSubject]; const unit=c.units[state.currentUnitIndex];
@@ -784,12 +782,12 @@ function finishExercise(){
   const totalStars=getTotalStars(); const badges=getBadges(); const newBadges=[];
   const milestones=[{id:'stars-10',name:'⭐ 初露锋芒',desc:'累计获得10颗星',cond:totalStars>=10},{id:'stars-30',name:'🌟 学习小达人',desc:'累计获得30颗星',cond:totalStars>=30},{id:'stars-60',name:'💫 智慧之星',desc:'累计获得60颗星',cond:totalStars>=60},{id:'stars-100',name:'👑 学霸大王',desc:'累计获得100颗星',cond:totalStars>=100}];
   milestones.forEach(m=>{ if(m.cond&&!badges.find(b=>b.id===m.id)){ addBadge(m); newBadges.push(m); } });
-  if(stars===6&&!badges.find(b=>b.id==='first-perfect')){ const fb={id:'first-perfect',name:'🎯 满分冠军',desc:'第一次全部答对'}; addBadge(fb); newBadges.push(fb); }
+  if(stars>=5&&!badges.find(b=>b.id==='first-perfect')){ const fb={id:'first-perfect',name:'🎯 满分冠军',desc:'第一次全部答对'}; addBadge(fb); newBadges.push(fb); }
 
   // Render result
   showPage('page-result');
   let msg='',emoji='';
-  if(stars===6){ msg='太棒了！全对通过！'; emoji='🎉'; }
+  if(stars>=5){ msg='太棒了！全对通过！'; emoji='🎉'; }
   else { msg='别灰心，再来一次吧！'; emoji='💪'; }
 
   const hasNextLesson=state.currentLessonIndex<unit.lessons.length-1;
@@ -802,7 +800,7 @@ function finishExercise(){
       <span class="result-message">${msg}</span>
       <div class="result-score"><span class="num">${correct}</span><span class="divider">/</span><span class="total">${total}</span>正确</div>
       <div class="result-accuracy">正确率：${accuracy}%</div>
-      <div class="result-stars">${stars===6?'⭐ × 6':'☆'}</div>
+      <div class="result-stars">${stars>=5?'⭐ × '+stars:'☆'}</div>
     </div>
     <div class="result-grade card">
       <div style="font-weight:700;margin-bottom:12px;padding-bottom:8px;border-bottom:2px dashed #EEE">成绩单</div>
