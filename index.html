@@ -143,6 +143,13 @@ input,button,textarea{font:inherit;color:inherit}
 .status-txt{font-size:var(--font-sm);font-weight:600;min-height:20px}
 .status-correct{color:#2ECC71}
 .status-wrong{color:#E74C3C}
+.spell-area{display:flex;gap:12px;margin-top:16px}
+.spell-input{flex:1;padding:14px 18px;font-size:var(--font-lg);border:3px solid #E0E0E0;border-radius:var(--radius);outline:none}
+.spell-input:focus{border-color:var(--primary)}
+.spell-input:disabled{background:#F5F5F5}
+.spell-result{text-align:center;margin-top:16px;font-size:var(--font-lg);font-weight:700;padding:12px;border-radius:var(--radius)}
+.spell-result.status-correct{background:#F0FFF4;color:#2ECC71}
+.spell-result.status-wrong{background:#FFF0F0;color:#E74C3C}
 
 /* ============ Result Page ============ */
 .result-card{text-align:center;padding:40px 24px}
@@ -337,56 +344,95 @@ const COURSES = {
       ],exercises:[]}
     ]}
   ]},
-  english: { id:'english',name:'英语',icon:'🔤',color:'#A78BFA',desc:'认字母、学单词、说口语', units:[
-    { id:'english-u1',title:'字母 A - H',subtitle:'大小写认读 + 书写',icon:'🅰️',lessons:[
-      { id:'english-u1-l1',title:'A B C D',type:'letter',cards:[
-        { title:'字母 A a',content:'A 像一座尖尖塔 🔺\na 像圆圆小苹果 🍎\n\nA is for Apple 苹果\n发音：/æ/（张大嘴）\n跟我读：A A A, /æ/ /æ/ /æ/',emoji:'🍎',pinyin:''},
-        { title:'字母 B b',content:'B 像两个大肚子 🐻\nb 像一个小棒球 ⚾\n\nB is for Bear 小熊\n发音：/b/（闭嘴唇）\n跟我读：B B B, /b/ /b/ /b/',emoji:'🐻',pinyin:''},
-        { title:'字母 C c',content:'C 像弯弯小月亮 🌙\n\nC is for Cat 小猫\n发音：/k/（喉咙发声）\n跟我读：C C C, /k/ /k/ /k/',emoji:'🐱',pinyin:''},
-        { title:'字母 D d',content:'D 像半个大月饼 🌓\nd 像小鼓咚咚敲 🥁\n\nD is for Dog 小狗\n发音：/d/（舌尖顶上颚）\n跟我读：D D D, /d/ /d/ /d/',emoji:'🐶',pinyin:''}],
-       exercises:[{q:'A is for ___?',opts:['Bear','Apple','Cat','Dog'],ans:1},{q:'B is for ___?',opts:['Apple','Dog','Bear','Cat'],ans:2},{q:'哪个字母像月亮？',opts:['A','B','C','D'],ans:2},{q:'D is for ___?',opts:['Cat','Apple','Bear','Dog'],ans:3}]},
-      { id:'english-u1-l2',title:'E F G H',type:'letter',cards:[
-        { title:'字母 E-H',content:'E is for Egg 鸡蛋 🥚\nF is for Fish 小鱼 🐟\nG is for Goat 山羊 🐐\nH is for Hat 帽子 🎩\n\n发音：E:/e/(嘴巴扁扁) F:/f/(上牙咬下唇) G:/g/(喉咙发声) H:/h/(轻轻哈气)',emoji:'🥚',pinyin:''}],
-       exercises:[{q:'E is for ___?',opts:['Fish','Egg','Goat','Hat'],ans:1},{q:'F is for ___?',opts:['Egg','Hat','Fish','Goat'],ans:2},{q:'H is for ___?',opts:['Fish','Goat','Hat','Egg'],ans:2},{q:'G is for ___?',opts:['Hat','Egg','Fish','Goat'],ans:3}]}
+  english: { id:'english',name:'英语',icon:'🔤',color:'#A78BFA',desc:'剑桥Starters少儿单词', units:[
+    { id:'english-u1',title:'Day1 数字、颜色',subtitle:'剑桥Starters',icon:'🔢',lessons:[
+      { id:'english-u1-l1',title:'英译中练习',type:'eng-choice',cards:[],exercises:[]},
+      { id:'english-u1-l2',title:'拼写练习',type:'eng-spell',cards:[],exercises:[]}
     ]},
-    { id:'english-u2',title:'字母 I - P',subtitle:'大小写认读 + 书写',icon:'ℹ️',lessons:[
-      { id:'english-u2-l1',title:'I J K L',type:'letter',cards:[
-        { title:'I J K L',content:'I is for Ice cream 冰淇淋 🍦\nJ is for Juice 果汁 🧃\nK is for Kite 风筝 🪁\nL is for Lion 狮子 🦁\n\n发音：I:/aɪ/ J:/dʒ/ K:/k/ L:/l/',emoji:'🍦',pinyin:''}],
-       exercises:[{q:'I is for ___?',opts:['Juice','Lion','Ice cream','Kite'],ans:2},{q:'K is for ___?',opts:['Ice cream','Kite','Juice','Lion'],ans:1},{q:'L is for ___?',opts:['Kite','Juice','Ice cream','Lion'],ans:3},{q:'J is for ___?',opts:['Lion','Ice cream','Juice','Kite'],ans:2}]},
-      { id:'english-u2-l2',title:'M N O P',type:'letter',cards:[
-        { title:'M N O P',content:'M is for Monkey 猴子 🐵\nN is for Nose 鼻子 👃\nO is for Orange 橙子 🍊\nP is for Pig 小猪 🐷\n\n发音：M:/m/ N:/n/ O:/əʊ/ P:/p/',emoji:'🐵',pinyin:''}],
-       exercises:[{q:'M is for ___?',opts:['Nose','Monkey','Orange','Pig'],ans:1},{q:'O is for ___?',opts:['Monkey','Pig','Orange','Nose'],ans:2},{q:'P is for ___?',opts:['Orange','Nose','Monkey','Pig'],ans:3},{q:'N is for ___?',opts:['Pig','Orange','Nose','Monkey'],ans:2}]}
+    { id:'english-u2',title:'Day2 文具、家具、交通工具',subtitle:'剑桥Starters',icon:'✏️',lessons:[
+      { id:'english-u2-l1',title:'英译中练习',type:'eng-choice',cards:[],exercises:[]},
+      { id:'english-u2-l2',title:'拼写练习',type:'eng-spell',cards:[],exercises:[]}
     ]},
-    { id:'english-u3',title:'字母 Q - Z',subtitle:'大小写认读 + 书写',icon:'🇶',lessons:[
-      { id:'english-u3-l1',title:'Q R S T',type:'letter',cards:[
-        { title:'Q R S T',content:'Q is for Queen 女王 👑\nR is for Rabbit 兔子 🐰\nS is for Sun 太阳 ☀️\nT is for Tiger 老虎 🐯\n\n发音：Q:/kw/ R:/r/(卷舌头) S:/s/(像蛇) T:/t/',emoji:'👑',pinyin:''}],
-       exercises:[{q:'Q is for ___?',opts:['Rabbit','Queen','Sun','Tiger'],ans:1},{q:'S is for ___?',opts:['Queen','Tiger','Sun','Rabbit'],ans:2},{q:'哪个字母发音像蛇？',opts:['Q','R','S','T'],ans:2}]},
-      { id:'english-u3-l2',title:'U V W X Y Z',type:'letter',cards:[
-        { title:'U-Z',content:'U is for Umbrella 雨伞 ☂️\nV is for Violin 小提琴 🎻\nW is for Water 水 💧\nX is for X-ray X光 🩻\nY is for Yellow 黄色 💛\nZ is for Zebra 斑马 🦓\n\n26个字母学完啦！真棒！🎉',emoji:'🎉',pinyin:''}],
-       exercises:[{q:'U is for ___?',opts:['Violin','Umbrella','Water','Yellow'],ans:1},{q:'Z is for ___?',opts:['Yellow','Water','Zebra','Umbrella'],ans:2},{q:'W is for ___?',opts:['Zebra','Umbrella','Yellow','Water'],ans:3},{q:'英语一共有几个字母？',opts:['24个','26个','28个','30个'],ans:1}]}
+    { id:'english-u3',title:'Day3 玩具、家人',subtitle:'剑桥Starters',icon:'🧸',lessons:[
+      { id:'english-u3-l1',title:'英译中练习',type:'eng-choice',cards:[],exercises:[]},
+      { id:'english-u3-l2',title:'拼写练习',type:'eng-spell',cards:[],exercises:[]}
     ]},
-    { id:'english-u4',title:'颜色和数字',subtitle:'Colors & Numbers',icon:'🌈',lessons:[
-      { id:'english-u4-l1',title:'常见颜色',type:'word',cards:[
-        { title:'Colors 颜色',content:'Red 🔴 红色\nBlue 🔵 蓝色\nYellow 🟡 黄色\nGreen 🟢 绿色\n\n句型：\nWhat color is it? 这是什么颜色？\nIt\'s red. 它是红色的。\nI like blue. 我喜欢蓝色。',emoji:'🌈',pinyin:''}],
-       exercises:[{q:'Red 是什么意思？',opts:['蓝色','红色','绿色','黄色'],ans:1},{q:'Blue 是什么意思？',opts:['红色','黄色','蓝色','绿色'],ans:2},{q:'"我喜欢蓝色"用英语怎么说？',opts:['I like red','I like blue','I like green','I like yellow'],ans:1},{q:'Green 是什么颜色？',opts:['红色','蓝色','黄色','绿色'],ans:3}]},
-      { id:'english-u4-l2',title:'数字 1-10',type:'word',cards:[
-        { title:'Numbers 1-10',content:'One 1️⃣ 一\nTwo 2️⃣ 二\nThree 3️⃣ 三\nFour 4️⃣ 四\nFive 5️⃣ 五\nSix 6️⃣ 六\nSeven 7️⃣ 七\nEight 8️⃣ 八\nNine 9️⃣ 九\nTen 🔟 十\n\n句型：How many? 多少个？\nThree apples. 三个苹果。',emoji:'🔢',pinyin:''}],
-       exercises:[{q:'Three 是数字几？',opts:['1','2','3','4'],ans:2},{q:'Five 是数字几？',opts:['4','5','6','7'],ans:1},{q:'Eight 是数字几？',opts:['6','7','8','9'],ans:2},{q:'"多少个"用英语怎么说？',opts:['What color?','How many?','What is it?','Who is it?'],ans:1}]}
+    { id:'english-u4',title:'Day4 动作、身体部位',subtitle:'剑桥Starters',icon:'🏃',lessons:[
+      { id:'english-u4-l1',title:'英译中练习',type:'eng-choice',cards:[],exercises:[]},
+      { id:'english-u4-l2',title:'拼写练习',type:'eng-spell',cards:[],exercises:[]}
     ]},
-    { id:'english-u5',title:'动物和水果',subtitle:'Animals & Fruits',icon:'🐾',lessons:[
-      { id:'english-u5-l1',title:'可爱的动物',type:'word',cards:[
-        { title:'Animals 动物',content:'Cat 🐱 猫\nDog 🐶 狗\nFish 🐟 鱼\nBird 🐦 鸟\nRabbit 🐰 兔子\nMonkey 🐵 猴子\n\n句型：What\'s this? 这是什么？\nIt\'s a cat. 它是一只猫。',emoji:'🐱',pinyin:''}],
-       exercises:[{q:'Dog 是什么动物？',opts:['猫','狗','鱼','鸟'],ans:1},{q:'Cat 是什么动物？',opts:['狗','鱼','猫','兔子'],ans:2},{q:'Rabbit 是什么动物？',opts:['猫','狗','鱼','兔子'],ans:3},{q:'Bird 是什么动物？',opts:['鱼','鸟','猴子','兔子'],ans:1}]},
-      { id:'english-u5-l2',title:'好吃的水果',type:'word',cards:[
-        { title:'Fruits 水果',content:'Apple 🍎 苹果\nBanana 🍌 香蕉\nOrange 🍊 橙子\nGrape 🍇 葡萄\nWatermelon 🍉 西瓜\n\n句型：Do you like apples?\nYes, I do. / No, I don\'t.',emoji:'🍎',pinyin:''}],
-       exercises:[{q:'Apple 是什么水果？',opts:['香蕉','苹果','橙子','葡萄'],ans:1},{q:'Banana 是什么水果？',opts:['苹果','橙子','香蕉','西瓜'],ans:2},{q:'"你喜欢苹果吗"用英语怎么说？',opts:['I like apples','Do you like apples?','What is it?','Is it an apple?'],ans:1},{q:'Watermelon 是什么？',opts:['苹果','香蕉','葡萄','西瓜'],ans:3}]}
+    { id:'english-u5',title:'Day5 形容词、野生动物、身体',subtitle:'剑桥Starters',icon:'🐘',lessons:[
+      { id:'english-u5-l1',title:'英译中练习',type:'eng-choice',cards:[],exercises:[]},
+      { id:'english-u5-l2',title:'拼写练习',type:'eng-spell',cards:[],exercises:[]}
     ]},
-    { id:'english-u6',title:'日常用语',subtitle:'Daily English',icon:'💬',lessons:[
-      { id:'english-u6-l1',title:'打招呼和礼貌用语',type:'speaking',cards:[
-        { title:'Greetings 打招呼',content:'Hello! / Hi! 你好！👋\nGood morning! 早上好！🌅\nGoodbye! / Bye! 再见！👋\n\nThank you! 谢谢你！🙏\nYou\'re welcome. 不客气。😊\nSorry! 对不起！🙇\n\nPlease. 请。\nExcuse me. 打扰一下。\n\n对话：\nA: Hello! How are you?\nB: I\'m fine, thank you!',emoji:'👋',pinyin:''}],
-       exercises:[{q:'"你好"用英语怎么说？',opts:['Goodbye','Hello','Sorry','Thank you'],ans:1},{q:'"谢谢你"用英语怎么说？',opts:['Sorry','Hello','Goodbye','Thank you'],ans:3},{q:'"对不起"用英语怎么说？',opts:['Please','Sorry','Hello','Thank you'],ans:1},{q:'别人说"Thank you"，你回答？',opts:['Sorry','Goodbye','You\'re welcome','Hello'],ans:2}]}
+    { id:'english-u6',title:'Day6 身体、动物',subtitle:'剑桥Starters',icon:'🐸',lessons:[
+      { id:'english-u6-l1',title:'英译中练习',type:'eng-choice',cards:[],exercises:[]},
+      { id:'english-u6-l2',title:'拼写练习',type:'eng-spell',cards:[],exercises:[]}
+    ]},
+    { id:'english-u7',title:'Day7 食物、一日三餐',subtitle:'剑桥Starters',icon:'🍎',lessons:[
+      { id:'english-u7-l1',title:'英译中练习',type:'eng-choice',cards:[],exercises:[]},
+      { id:'english-u7-l2',title:'拼写练习',type:'eng-spell',cards:[],exercises:[]}
+    ]},
+    { id:'english-u8',title:'Day8 居家物品',subtitle:'剑桥Starters',icon:'🏠',lessons:[
+      { id:'english-u8-l1',title:'英译中练习',type:'eng-choice',cards:[],exercises:[]},
+      { id:'english-u8-l2',title:'拼写练习',type:'eng-spell',cards:[],exercises:[]}
+    ]},
+    { id:'english-u9',title:'Day9 房屋、出行、地点',subtitle:'剑桥Starters',icon:'🚗',lessons:[
+      { id:'english-u9-l1',title:'英译中练习',type:'eng-choice',cards:[],exercises:[]},
+      { id:'english-u9-l2',title:'拼写练习',type:'eng-spell',cards:[],exercises:[]}
+    ]},
+    { id:'english-u10',title:'Day10 出行、服饰',subtitle:'剑桥Starters',icon:'👗',lessons:[
+      { id:'english-u10-l1',title:'英译中练习',type:'eng-choice',cards:[],exercises:[]},
+      { id:'english-u10-l2',title:'拼写练习',type:'eng-spell',cards:[],exercises:[]}
+    ]},
+    { id:'english-u11',title:'Day11 服饰、情绪',subtitle:'剑桥Starters',icon:'👚',lessons:[
+      { id:'english-u11-l1',title:'英译中练习',type:'eng-choice',cards:[],exercises:[]},
+      { id:'english-u11-l2',title:'拼写练习',type:'eng-spell',cards:[],exercises:[]}
+    ]},
+    { id:'english-u12',title:'Day12 运动、爱好',subtitle:'剑桥Starters',icon:'⚽',lessons:[
+      { id:'english-u12-l1',title:'英译中练习',type:'eng-choice',cards:[],exercises:[]},
+      { id:'english-u12-l2',title:'拼写练习',type:'eng-spell',cards:[],exercises:[]}
+    ]},
+    { id:'english-u13',title:'Day13 常用短语',subtitle:'剑桥Starters',icon:'💬',lessons:[
+      { id:'english-u13-l1',title:'英译中练习',type:'eng-choice',cards:[],exercises:[]},
+      { id:'english-u13-l2',title:'拼写练习',type:'eng-spell',cards:[],exercises:[]}
     ]}
-  ]}
+  ]},
+
+// Cambridge Starters Day1-Day13
+var ENG_WORDS=[
+  [{en:"one",cn:"一"},{en:"two",cn:"二"},{en:"three",cn:"三"},{en:"four",cn:"四"},{en:"five",cn:"五"},{en:"blue",cn:"蓝色的"},{en:"green",cn:"绿色的"},{en:"orange",cn:"橙色的"},{en:"pink",cn:"粉色的"},{en:"grey",cn:"灰色的"},{en:"brown",cn:"棕色的"},{en:"purple",cn:"紫色的"},{en:"black",cn:"黑色的"},{en:"yellow",cn:"黄色的"},{en:"white",cn:"白色的"}],
+  [{en:"pencil",cn:"铅笔"},{en:"table",cn:"桌子"},{en:"board",cn:"白板"},{en:"bookcase",cn:"书柜"},{en:"cupboard",cn:"橱柜"},{en:"desk",cn:"书桌"},{en:"ruler",cn:"尺子"},{en:"teacher",cn:"老师"},{en:"ball",cn:"球"},{en:"bike",cn:"自行车"},{en:"car",cn:"汽车"},{en:"book",cn:"书本"},{en:"chair",cn:"椅子"},{en:"eraser",cn:"橡皮擦"}],
+  [{en:"computer",cn:"计算机"},{en:"doll",cn:"洋娃娃"},{en:"train",cn:"火车"},{en:"camera",cn:"相机"},{en:"computer game",cn:"电脑游戏"},{en:"kite",cn:"风筝"},{en:"lorry",cn:"货车"},{en:"robot",cn:"机器人"},{en:"watch",cn:"手表/观看"},{en:"mother",cn:"妈妈"},{en:"father",cn:"爸爸"},{en:"brother",cn:"兄弟"},{en:"sister",cn:"姐妹"},{en:"grandmother",cn:"奶奶/外婆"},{en:"grandfather",cn:"爷爷/外公"},{en:"old",cn:"老的"},{en:"young",cn:"年轻的"},{en:"ugly",cn:"丑陋的"},{en:"beautiful",cn:"美丽的"},{en:"happy",cn:"开心的"},{en:"baby",cn:"宝宝"},{en:"cousin",cn:"表兄弟姐妹"},{en:"catch",cn:"接住"},{en:"clean",cn:"清洁/打扫"}],
+  [{en:"fly",cn:"飞"},{en:"get",cn:"得到"},{en:"hit",cn:"击中"},{en:"jump",cn:"跳跃"},{en:"sleep",cn:"睡觉"},{en:"throw",cn:"扔"},{en:"face",cn:"脸部"},{en:"mouth",cn:"嘴巴"},{en:"nose",cn:"鼻子"},{en:"teeth",cn:"牙齿"},{en:"bird",cn:"小鸟"},{en:"cat",cn:"猫"},{en:"dog",cn:"狗"},{en:"fish",cn:"鱼"},{en:"horse",cn:"马"},{en:"mouse",cn:"老鼠"},{en:"big",cn:"大的"},{en:"small",cn:"小的"},{en:"long",cn:"长的"}],
+  [{en:"short",cn:"短的"},{en:"clean",cn:"干净的"},{en:"dirty",cn:"脏的"},{en:"crocodile",cn:"鳄鱼"},{en:"elephant",cn:"大象"},{en:"giraffe",cn:"长颈鹿"},{en:"hippo",cn:"河马"},{en:"monkey",cn:"猴子"},{en:"snake",cn:"蛇"},{en:"tiger",cn:"老虎"},{en:"arm",cn:"手臂"}],
+  [{en:"foot",cn:"脚"},{en:"feet",cn:"双脚"},{en:"hand",cn:"手"},{en:"leg",cn:"腿"},{en:"tail",cn:"尾巴"},{en:"duck",cn:"鸭子"},{en:"frog",cn:"青蛙"},{en:"goat",cn:"山羊"},{en:"lizard",cn:"蜥蜴"},{en:"sheep",cn:"绵羊"},{en:"spider",cn:"蜘蛛"}],
+  [{en:"apple",cn:"苹果"},{en:"banana",cn:"香蕉"},{en:"burger",cn:"汉堡"},{en:"cake",cn:"蛋糕"},{en:"chocolate",cn:"巧克力"},{en:"ice cream",cn:"冰淇淋"},{en:"orange",cn:"橙子"},{en:"bread",cn:"面包"},{en:"chicken",cn:"鸡肉"},{en:"chips",cn:"薯片"},{en:"eggs",cn:"鸡蛋"},{en:"juice",cn:"果汁"},{en:"milk",cn:"牛奶"},{en:"rice",cn:"米饭"},{en:"water",cn:"水"},{en:"breakfast",cn:"早餐"},{en:"lunch",cn:"午餐"},{en:"dinner",cn:"晚餐"},{en:"lemonade",cn:"柠檬水"}],
+  [{en:"sofa",cn:"沙发"},{en:"box",cn:"箱子"},{en:"radio",cn:"收音机"},{en:"bath",cn:"浴缸"},{en:"bed",cn:"床"},{en:"table",cn:"桌子"},{en:"chair",cn:"椅子"},{en:"window",cn:"窗户"},{en:"wall",cn:"墙壁"}],
+  [{en:"door",cn:"门"},{en:"armchair",cn:"扶手椅"},{en:"rug",cn:"小地毯"},{en:"TV",cn:"电视机"},{en:"painting",cn:"油画"},{en:"plane",cn:"飞机"},{en:"boat",cn:"小船"},{en:"motorbike",cn:"摩托车"},{en:"helicopter",cn:"直升飞机"},{en:"bus",cn:"公交车"},{en:"park",cn:"公园"},{en:"shop",cn:"商店"},{en:"hospital",cn:"医院"},{en:"cafe",cn:"咖啡店"},{en:"street",cn:"街道"},{en:"flat",cn:"公寓"},{en:"beach",cn:"沙滩"},{en:"sun",cn:"太阳"},{en:"sea",cn:"大海"},{en:"shell",cn:"贝壳"},{en:"sand",cn:"沙粒"},{en:"mountain",cn:"山"},{en:"bookshop",cn:"书店"}],
+  [{en:"ship",cn:"轮船"},{en:"train",cn:"火车"},{en:"school",cn:"学校"},{en:"town",cn:"小镇"},{en:"run",cn:"跑步"},{en:"glasses",cn:"眼镜"},{en:"hat",cn:"帽子"},{en:"clothes",cn:"衣服"},{en:"bag",cn:"包"},{en:"handbag",cn:"手提包"},{en:"jacket",cn:"外套/夹克"}],
+  [{en:"skirt",cn:"短裙"},{en:"shoe",cn:"鞋子"},{en:"sock",cn:"袜子"},{en:"watch",cn:"手表"},{en:"T-shirt",cn:"短袖汗衫"},{en:"jeans",cn:"牛仔裤"},{en:"dress",cn:"连衣裙"},{en:"shirt",cn:"衬衫"},{en:"trousers",cn:"裤子"}],
+  [{en:"jumping",cn:"跳跃"},{en:"running",cn:"跑步"},{en:"spelling",cn:"拼写"},{en:"watching TV",cn:"看电视"},{en:"taking photos",cn:"拍照片"},{en:"reading",cn:"阅读"},{en:"fishing",cn:"钓鱼"},{en:"singing",cn:"唱歌"},{en:"soccer",cn:"足球"},{en:"swim",cn:"游泳"},{en:"piano",cn:"钢琴"},{en:"skateboarding",cn:"滑板运动"},{en:"badminton",cn:"羽毛球"},{en:"table tennis",cn:"乒乓球"},{en:"hockey",cn:"曲棍球"},{en:"baseball",cn:"棒球"},{en:"play football",cn:"踢足球"},{en:"play basketball",cn:"打篮球"},{en:"play tennis",cn:"打网球"},{en:"play the guitar",cn:"弹吉他"},{en:"ride a bike",cn:"骑车"},{en:"play the piano",cn:"弹钢琴"}],
+  [{en:"good morning",cn:"早上好"},{en:"good night",cn:"晚安"},{en:"in the morning",cn:"在早上"},{en:"in the afternoon",cn:"在下午"},{en:"in the evening",cn:"在晚上"},{en:"my sister",cn:"我的姐妹"},{en:"my brother",cn:"我的兄弟"},{en:"my cousin",cn:"我的堂兄妹"},{en:"your name",cn:"你的名字"},{en:"his name",cn:"他的名字"},{en:"her name",cn:"她的名字"},{en:"how old",cn:"多大/几岁"},{en:"what time",cn:"几点"},{en:"father job",cn:"父亲的工作"},{en:"mother job",cn:"母亲的工作"},{en:"tall and strong",cn:"高大强壮"},{en:"short and slim",cn:"矮且苗条"}]
+];
+
+function getEngExercises(dayIdx, type){
+  var words=ENG_WORDS[dayIdx]||[], exs=[], n=Math.min(words.length,12);
+  var sample=words.slice(); sample.sort(function(){ return Math.random()-0.5; }); sample=sample.slice(0,n);
+  for(var i=0;i<sample.length;i++){
+    var w=sample[i];
+    if(type==="spell"){
+      exs.push({type:"spell", q:"「"+w.cn+"」的英文是什么？", ans:w.en});
+    } else {
+      var opts=[w.cn], pool=ENG_WORDS[dayIdx];
+      while(opts.length<4){ var r=pool[Math.floor(Math.random()*pool.length)].cn; if(opts.indexOf(r)===-1) opts.push(r); }
+      opts.sort(function(){ return Math.random()-0.5; });
+      exs.push({q:"「"+w.en+"」是什么意思？", opts:opts, ans:opts.indexOf(w.cn)});
+    }
+  }
+  return exs;
+}
+
 };
 
 /* ================================================================
@@ -407,7 +453,7 @@ function addBadge(b){ const badges=getBadges(); if(!badges.find(x=>x.id===b.id))
 function getExchangeHistory(){ return LS.get('exchanges',[]); }
 function addExchangeRecord(r){ const h=getExchangeHistory(); h.push({...r,exchangedAt:Date.now()}); LS.set('exchanges',h); return h; }
 
-function calculateStars(correct,total){ return correct===total ? 1 : 0; }
+function calculateStars(correct,total,subj){ if(correct!==total) return 0; return subj==="math"?5:subj==="english"?6:1; }
 function isUnitUnlocked(units,uIndex,progress){
   if(uIndex===0) return true;
   const prev=units[uIndex-1]; const pp=progress[prev.id];
@@ -537,19 +583,18 @@ function openLesson(uIndex){
 }
 
 function renderLesson(){
-  const c=COURSES[state.currentSubject]; const unit=c.units[state.currentUnitIndex];
-  const lessons=unit.lessons; const li=state.currentLessonIndex;
-  const lesson=lessons[li];
+  var c=COURSES[state.currentSubject], unit=c.units[state.currentUnitIndex], lessons=unit.lessons, li=state.currentLessonIndex, lesson=lessons[li];
   document.getElementById('lessonTitle').textContent=unit.title;
-  document.getElementById('lessonTabs').innerHTML=lessons.map((l,i)=>`<button class="lesson-tab ${i===li?'active':''}" onclick="switchLesson(${i})">${l.title}</button>`).join('');
-  const cards=lesson.cards; const ci=state.currentCardIndex; const card=cards[ci];
-  document.getElementById('lessonCard').innerHTML=`<div class="knowledge-card">
-    <div class="card-title-row"><span class="card-emoji">${card.emoji}</span><span class="card-title">${card.title}</span></div>
-    <div class="card-content">${card.content.replace(/\n/g,'<br>')}</div></div>
-    ${cards.length>1?`<div class="card-nav">
-      <button class="btn btn-sm btn-outline" onclick="prevCard()" ${ci===0?'disabled':''}>◀ 上一页</button>
-      <span class="card-indicator">${ci+1}/${cards.length}</span>
-      <button class="btn btn-sm btn-outline" onclick="nextCard()" ${ci===cards.length-1?'disabled':''}>下一页 ▶</button></div>`:''}`;
+  document.getElementById('lessonTabs').innerHTML=lessons.map(function(l,i){ return '<button class=\"lesson-tab '+(i===li?'active':'')+'\" onclick=\"switchLesson('+i+')\">'+l.title+'</button>'; }).join('');
+  // For English, generate card from word list
+  var cards=lesson.cards||[];
+  if(lesson.type==='eng-choice'||lesson.type==='eng-spell'){
+    var words=ENG_WORDS[state.currentUnitIndex]||[];
+    var txt=words.map(function(w){ return w.en+' - '+w.cn; }).join('\\n');
+    cards=[{title:lesson.title,content:txt,emoji:lesson.type==='eng-spell'?'✍️':'📝',pinyin:''}];
+  }
+  var ci=state.currentCardIndex, card=cards[ci]||{title:'',content:'',emoji:''};
+  document.getElementById('lessonCard').innerHTML='<div class=\"knowledge-card\"><div class=\"card-title-row\"><span class=\"card-emoji\">'+card.emoji+'</span><span class=\"card-title\">'+card.title+'</span></div><div class=\"card-content\">'+card.content.replace(/\\n/g,'<br>')+'</div></div>'+(cards.length>1?'<div class=\"card-nav\"><button class=\"btn btn-sm btn-outline\" onclick=\"prevCard()\" '+(ci===0?'disabled':'')+'>◀ 上一页</button><span class=\"card-indicator\">'+(ci+1)+'/'+cards.length+'</span><button class=\"btn btn-sm btn-outline\" onclick=\"nextCard()\" '+(ci===cards.length-1?'disabled':'')+'>下一页 ▶</button></div>':'');
   document.getElementById('startExerciseBtn').textContent='📝 开始练习';
   document.getElementById('startExerciseBtn').onclick=startExercise;
 }
@@ -564,10 +609,31 @@ function nextCard(){ const c=COURSES[state.currentSubject]; const unit=c.units[s
 /* ================================================================
    EXERCISE PAGE
    ================================================================ */
+// Generate 50 random math questions: +- within 100, x 1-9
+function generateMathQuestions(){
+  var qs=[], types=[];
+  for(var i=0;i<50;i++){ types.push(i%3); }
+  types.sort(function(){ return Math.random()-0.5; });
+  for(var i=0;i<50;i++){
+    var t=types[i], a, b, ans, q;
+    if(t===0){ a=Math.floor(Math.random()*80)+10; b=Math.floor(Math.random()*(100-a-1))+1; q=a+'+'+b+'=?'; ans=a+b; }
+    else if(t===1){ a=Math.floor(Math.random()*75)+25; b=Math.floor(Math.random()*a); q=a+'-'+b+'=?'; ans=a-b; }
+    else { a=Math.floor(Math.random()*9)+1; b=Math.floor(Math.random()*9)+1; q=a+'x'+b+'=?'; ans=a*b; }
+    var opts=[ans];
+    while(opts.length<4){ var d=ans+Math.floor(Math.random()*19)-9; if(d>=0&&d<=100&&opts.indexOf(d)===-1) opts.push(d); }
+    opts.sort(function(){ return Math.random()-0.5; });
+    qs.push({q:q,opts:opts.map(String),ans:opts.indexOf(ans)});
+  }
+  return qs;
+}
+
 function startExercise(){
-  const c=COURSES[state.currentSubject]; const unit=c.units[state.currentUnitIndex];
-  const lesson=unit.lessons[state.currentLessonIndex];
-  state.exercises=lesson.exercises||[]; state.currentExIndex=0; state.userAnswers=new Array(state.exercises.length).fill(-1);
+  var c=COURSES[state.currentSubject], unit=c.units[state.currentUnitIndex], lesson=unit.lessons[state.currentLessonIndex];
+  if(lesson.type==='math-random'){ state.exercises=generateMathQuestions(); }
+  else if(lesson.type==='eng-choice'){ state.exercises=getEngExercises(state.currentUnitIndex,'choice'); }
+  else if(lesson.type==='eng-spell'){ state.exercises=getEngExercises(state.currentUnitIndex,'spell'); }
+  else { state.exercises=lesson.exercises||[]; }
+  state.currentExIndex=0; state.userAnswers=new Array(state.exercises.length).fill(-1);
   state.answered=false; state.selectedIdx=-1;
   if(state.exercises.length===0){ showToast('本课暂无练习'); return; }
   document.getElementById('exTitle').textContent=lesson.title+' · 练习';
@@ -575,53 +641,39 @@ function startExercise(){
 }
 
 function renderExercise(){
-  const exs=state.exercises; const i=state.currentExIndex; const ex=exs[i];
-  const total=exs.length; const pct=Math.round((i/total)*100);
-  document.getElementById('exBar').style.width=pct+'%';
+  var exs=state.exercises, i=state.currentExIndex, ex=exs[i], total=exs.length;
+  document.getElementById('exBar').style.width=Math.round((i/total)*100)+'%';
   document.getElementById('exLabel').textContent=(i+1)+'/'+total;
-
   if(!ex) return;
 
-  document.getElementById('exQuestion').innerHTML=`
-    <div class="question-number">Q${i+1}</div>
-    <div class="question-text">${ex.q||ex.question||''}</div>
-    ${(ex.opts||ex.options||[]).map((o,oi)=>{
-      let status=''; const ans=ex.ans!==undefined?ex.ans:ex.answer;
-      if(state.answered){
-        if(oi===ans) status='correct';
-        else if(oi===state.selectedIdx&&oi!==ans) status='wrong';
-      } else if(oi===state.selectedIdx) status='selected';
-      return `<div class="option-card ${status}" onclick="selectAnswer(${oi})">
-        <div class="option-label">${'ABCD'[oi]}</div>
-        <div class="option-text">${o}</div>
-        ${status==='correct'?'<span class="option-icon">✅</span>':''}
-        ${status==='wrong'?'<span class="option-icon">❌</span>':''}
-      </div>`;
-    }).join('')}`;
+  var ans=ex.ans!==undefined?ex.ans:ex.answer;
+  if(ex.type==='spell'){
+    document.getElementById('exQuestion').innerHTML='<div class=\"question-number\">✏️ Q'+(i+1)+'</div><div class=\"question-text\">'+ex.q+'</div><div class=\"spell-area\"><input type=\"text\" class=\"spell-input\" id=\"spellInput\" placeholder=\"输入英文单词...\" autocomplete=\"off\" autocapitalize=\"off\" '+(state.answered?'disabled':'')+'><button class=\"btn btn-primary btn-sm\" id=\"spellBtn\" onclick=\"submitSpelling()\" '+(state.answered?'disabled':'')+'>确认</button></div>'+(state.answered?'<div class=\"spell-result '+(state.spellCorrect?'status-correct':'status-wrong')+'\">'+(state.spellCorrect?'✅ 正确！':'❌ 正确答案：'+ans)+'</div>':'');
+    setTimeout(function(){ var inp=document.getElementById('spellInput'); if(inp&&!state.answered){ inp.focus(); inp.onkeydown=function(e){ if(e.key==='Enter') submitSpelling(); }; } },100);
+  } else {
+    document.getElementById('exQuestion').innerHTML='<div class=\"question-number\">Q'+(i+1)+'</div><div class=\"question-text\">'+(ex.q||ex.question||'')+'</div>'+(ex.opts||ex.options||[]).map(function(o,oi){
+      var status='';
+      if(state.answered){ if(oi===ans) status='correct'; else if(oi===state.selectedIdx&&oi!==ans) status='wrong'; }
+      else if(oi===state.selectedIdx) status='selected';
+      return '<div class=\"option-card '+status+'\" onclick=\"selectAnswer('+oi+')\"><div class=\"option-label\">'+'ABCD'[oi]+'</div><div class=\"option-text\">'+o+'</div>'+(status==='correct'?'<span class=\"option-icon\">✅</span>':'')+(status==='wrong'?'<span class=\"option-icon\">❌</span>':'')+'</div>';
+    }).join('');
+  }
 
-  // Status text
-  const st=document.getElementById('exStatus');
-  if(state.answered){
-    const ans=ex.ans!==undefined?ex.ans:ex.answer;
-    const correct=state.selectedIdx===ans;
-    st.innerHTML=correct?'<span class="status-correct">✅ 回答正确！</span>':'<span class="status-wrong">❌ 再想想哦</span>';
+  var st=document.getElementById('exStatus');
+  if(ex.type!=='spell'){
+    if(state.answered){ st.innerHTML=(state.selectedIdx===ans?'<span class=\"status-correct\">✅ 回答正确！</span>':'<span class=\"status-wrong\">❌ 再想想哦</span>'); }
+    else { st.innerHTML=''; }
   } else { st.innerHTML=''; }
 
-  // Nav buttons
   document.getElementById('exPrev').disabled=(i===0);
-  const nextBtn=document.getElementById('exNext');
+  var nextBtn=document.getElementById('exNext');
   nextBtn.disabled=!state.answered;
   nextBtn.textContent=i>=total-1?'完成 ✅':'下一题 ▶';
 
-  // Dots
-  document.getElementById('exDots').innerHTML=exs.map((_,di)=>{
-    let cls='ex-dot';
-    if(di===i) cls+=' current';
-    if(state.userAnswers[di]>=0){
-      const ans=exs[di].ans!==undefined?exs[di].ans:exs[di].answer;
-      cls+=state.userAnswers[di]===ans?' correct':' wrong';
-    }
-    return `<div class="${cls}"></div>`;
+  document.getElementById('exDots').innerHTML=exs.map(function(_,di){
+    var cls='ex-dot'; if(di===i) cls+=' current';
+    if(typeof state.userAnswers[di]==='number'&&state.userAnswers[di]>=0){ cls+=(state.userAnswers[di]===1)?' correct':' wrong'; }
+    return '<div class=\"'+cls+'\"></div>';
   }).join('');
 }
 
@@ -643,27 +695,39 @@ function selectAnswer(idx){
   },400);
 }
 
+function submitSpelling(){
+  if(state.answered) return;
+  var inp=document.getElementById('spellInput'); if(!inp) return;
+  var val=inp.value.trim(); if(!val){ showToast('请输入英文单词'); return; }
+  var ex=state.exercises[state.currentExIndex], correctAns=(ex.ans||ex.answer||'').toLowerCase().trim();
+  var correct=(val.toLowerCase().trim()===correctAns);
+  state.userAnswers[state.currentExIndex]=correct?1:0;
+  state.spellCorrect=correct; state.answered=true;
+  vibrate(correct?100:[200,100,200]);
+  renderExercise();
+}
+
 function exPrev(){
   if(state.currentExIndex<=0) return;
-  state.currentExIndex--; const prevAns=state.userAnswers[state.currentExIndex];
-  state.answered=prevAns>=0; state.selectedIdx=prevAns>=0?prevAns:-1;
+  state.currentExIndex--; var a=state.userAnswers[state.currentExIndex];
+  state.answered=(typeof a==='number'&&a>=0); state.selectedIdx=state.answered?a:-1; state.spellCorrect=(a===1);
   renderExercise();
 }
 
 function exNext(){
   if(!state.answered) return;
   if(state.currentExIndex>=state.exercises.length-1){ finishExercise(); return; }
-  state.currentExIndex++; const ans=state.userAnswers[state.currentExIndex];
-  state.answered=ans>=0; state.selectedIdx=ans>=0?ans:-1;
+  state.currentExIndex++; var a=state.userAnswers[state.currentExIndex];
+  state.answered=(typeof a==='number'&&a>=0); state.selectedIdx=state.answered?a:-1; state.spellCorrect=(a===1);
   renderExercise();
 }
 
 function finishExercise(){
   vibrate(300);
   const exs=state.exercises; const answers=state.userAnswers;
-  let correct=0; answers.forEach((a,i)=>{ if(a===exs[i].ans||a===exs[i].answer) correct++; });
+  let correct=0; answers.forEach(function(a,i){ var ex=exs[i]; if(ex.type==='spell'){ if(a===1) correct++; } else { if(a===ex.ans||a===ex.answer) correct++; } });
   const total=exs.length; const accuracy=Math.round((correct/total)*100);
-  const stars=calculateStars(correct,total); // 全对1颗，否则0
+  const stars=calculateStars(correct,total,state.currentSubject);
 
   // Save progress
   const c=COURSES[state.currentSubject]; const unit=c.units[state.currentUnitIndex];
@@ -687,7 +751,7 @@ function finishExercise(){
   // Render result
   showPage('page-result');
   let msg='',emoji='';
-  if(stars===1){ msg='太棒了！全对通过！'; emoji='🎉'; }
+  if(stars>=1){ msg='太棒了！全对通过！'; emoji='🎉'; }
   else { msg='别灰心，再来一次吧！'; emoji='💪'; }
 
   const hasNextLesson=state.currentLessonIndex<unit.lessons.length-1;
@@ -700,7 +764,7 @@ function finishExercise(){
       <span class="result-message">${msg}</span>
       <div class="result-score"><span class="num">${correct}</span><span class="divider">/</span><span class="total">${total}</span>正确</div>
       <div class="result-accuracy">正确率：${accuracy}%</div>
-      <div class="result-stars">${stars===1?'⭐':'☆'}</div>
+      <div class="result-stars">${stars>=1?'⭐ x '+stars:'☆'}</div>
     </div>
     <div class="result-grade card">
       <div style="font-weight:700;margin-bottom:12px;padding-bottom:8px;border-bottom:2px dashed #EEE">成绩单</div>
