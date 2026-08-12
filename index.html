@@ -892,17 +892,10 @@ function confirmExchange(id){
 /* ================================================================
    INIT
    ================================================================ */
-// Service worker: only register when served over HTTP (not file://)
-if('serviceWorker' in navigator && (location.protocol==='https:' || location.protocol==='http:')){
-  const swCode='const C="yxxj-v2";self.addEventListener("install",e=>{e.waitUntil(caches.open(C).then(c=>c.addAll(["./"])));self.skipWaiting()});self.addEventListener("activate",e=>{e.waitUntil(caches.keys().then(k=>Promise.all(k.filter(x=>x!==C).map(x=>caches.delete(x)))));self.clients.claim()});self.addEventListener("fetch",e=>{e.respondWith(caches.match(e.request).then(c=>c||fetch(e.request)))})';
-  const blob=new Blob([swCode],{type:'application/javascript'});
-  navigator.serviceWorker.register(URL.createObjectURL(blob)).catch(()=>{});
-}
-
-// URL参数：?stars=1000 可以快速设置星星数（方便测试兑换）
+// URL参数：?stars=1000
 (function(){
-  const m=location.search.match(/[?&]stars=(\d+)/);
-  if(m){ const n=parseInt(m[1]); LS.set('stars',n); showToast(`已设置 ${n} ⭐`); }
+  var m=location.search.match(/[?&]stars=(\d+)/);
+  if(m){ var n=parseInt(m[1]); LS.set('stars',n); showToast('已设置 '+n+' 星星'); }
 })();
 
 renderHome();
