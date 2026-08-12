@@ -276,6 +276,8 @@ input,button,textarea{font:inherit;color:inherit}
 <div class="modal-mask" id="modalMask" style="display:none"><div class="modal-box" id="modalBox"></div></div>
 
 <script>
+window.onerror=function(m,u,l){ var d=document.createElement("div"); d.style.cssText="position:fixed;top:0;left:0;right:0;background:red;color:#fff;padding:16px;z-index:99999;font-size:14px;text-align:center"; d.textContent="JS ERROR: "+m+" (line "+l+")"; document.body.appendChild(d); return false; };
+
 /* ================================================================
    DATA - 课程数据
    ================================================================ */
